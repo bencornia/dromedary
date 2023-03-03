@@ -9,14 +9,13 @@ API.
 - Footer
 - Auth
   - Login
-  - Signup
   - Account Management
+  - Account Edit/Signup
   - Auth Service
 - Inventory Dashboard
   - Inventory List
-    - Inventory Item
-  - Inventory Edit
-  - Inventory Detail
+    - Item Create/Edit
+      - Item
   - Inventory Service
   - Inventory Model
 - Reports ???
@@ -26,7 +25,8 @@ API.
 ## Wireframes
 
 - [Login Page](https://wireframe.cc/OuHwUr)
-- [Account Management]()
-- [Inventory Dashboard]()
-- [Inventory Detail]()
-- [Inventory Edit]()
+- [About Page](https://wireframe.cc/uuWUhh)
+- [Account Management](https://wireframe.cc/WpXj5A)
+- [Account Signup/Edit](https://wireframe.cc/wk2Py6)
+- [Inventory Dashboard](https://wireframe.cc/gEhINv)
+- [Item Create/Edit](https://wireframe.cc/pfKdgn)
