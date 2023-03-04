@@ -3,12 +3,14 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema({
   businessName: String,
-  profileImagePath: String,
   ownerName: String,
   email: String,
   password: String,
   apiKey: String,
+  profileImagePath: String,
   authToken: String,
+  createdDate: String,
+  lastUpdatedDate: String,
 });
 
 const User = mongoose.model("User", userSchema);
