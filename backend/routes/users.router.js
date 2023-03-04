@@ -1,19 +1,42 @@
 const { Router } = require("express");
 
 const { createUserValidator } = require("../validation/users.validation");
+const {
+  validateObjectId,
+} = require("../middleware/validateObjectId.middleware");
 
 const {
+  encryptPassword,
+  encryptApiKey,
+} = require("../middleware/encryptData.middleware");
+
+const {
+  getUsers,
   getUser,
   postUser,
-  putUser,
+  patchUser,
   deleteUser,
 } = require("../controllers/users.controller");
 
 const usersRouter = Router();
 
-usersRouter.get("/:id", getUser);
-usersRouter.post("/:id", createUserValidator, postUser);
-usersRouter.put("/:id", putUser);
-usersRouter.delete("/:id", deleteUser);
+usersRouter.get("", getUsers);
+usersRouter.get("/:id", validateObjectId, getUser);
+usersRouter.post(
+  "",
+  createUserValidator,
+  encryptPassword,
+  encryptApiKey,
+  postUser
+);
+usersRouter.patch(
+  "/:id",
+  createUserValidator,
+  encryptPassword,
+  encryptApiKey,
+  validateObjectId,
+  patchUser
+);
+usersRouter.delete("/:id", validateObjectId, deleteUser);
 
 module.exports = { usersRouter };
