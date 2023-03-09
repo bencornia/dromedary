@@ -18,7 +18,15 @@ function fileFilter(req, file, cb) {
 function fileName(req, file, cb) {
   const uniqueSuffix = Date.now();
   const ext = path.extname(file.originalname);
-  const profileImagePath = `${file.fieldname}-${req.body.businessName}-${uniqueSuffix}${ext}`;
+
+  // Normalize business name
+  const businessName = req.body.businessName
+    .trim()
+    .toLowerCase()
+    .replaceAll(/[\"\'\\\/]/g, "")
+    .replaceAll(/\s+/g, "-");
+
+  const profileImagePath = `${file.fieldname}-${businessName}-${uniqueSuffix}${ext}`;
   req.body.profileImagePath = profileImagePath;
   cb(null, profileImagePath);
 }
@@ -39,6 +47,7 @@ function uploadImageFileWrapper(fieldname) {
   const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
+    limits: { fileSize: 200000 },
   }).single(fieldname);
 
   return (req, res, next) => {

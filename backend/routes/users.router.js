@@ -29,7 +29,7 @@ usersRouter.get("/:id", validateObjectId, getUser);
 usersRouter.post(
   "",
   uploadImageFileWrapper("profileImage"),
-  // createUserValidator,
+  createUserValidator,
   encryptPassword,
   encryptApiKey,
   postUser
