@@ -54,7 +54,7 @@ async function postUser(req, res) {
       email: req.body.email,
       password: req.body.password,
       apiKey: req.body.apiKey,
-      profileImagePath: "",
+      profileImagePath: req.body.profileImagePath,
       authToken: "",
       createdDate: new Date().toISOString(),
       lastUpdatedDate: new Date().toISOString(),

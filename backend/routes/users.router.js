@@ -11,6 +11,10 @@ const {
 } = require("../middleware/encryptData.middleware");
 
 const {
+  uploadImageFileWrapper,
+} = require("../middleware/uploadFile.middleware");
+
+const {
   getUsers,
   getUser,
   postUser,
@@ -24,14 +28,15 @@ usersRouter.get("", getUsers);
 usersRouter.get("/:id", validateObjectId, getUser);
 usersRouter.post(
   "",
-  createUserValidator,
+  uploadImageFileWrapper("profileImage"),
+  // createUserValidator,
   encryptPassword,
   encryptApiKey,
   postUser
 );
 usersRouter.patch(
   "/:id",
-  createUserValidator,
+  // createUserValidator,
   encryptPassword,
   encryptApiKey,
   validateObjectId,

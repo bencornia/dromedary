@@ -10,7 +10,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Set up routing
-app.use(express.json());
+// app.use(express.json());
 app.use("/api", indexRouter);
 app.use("*", notFound);
 
