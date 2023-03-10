@@ -1,5 +1,4 @@
 const { User } = require("../models/users.model");
-const { validationResult } = require("express-validator");
 const { handleServerError } = require("../middleware/serverError");
 
 async function getUsers(req, res) {
@@ -17,7 +16,7 @@ async function getUsers(req, res) {
 }
 
 async function getUser(req, res) {
-  // Check for valid object id
+  // Get id
   let id = req.params.id;
 
   // Try making request
@@ -40,13 +39,6 @@ async function getUser(req, res) {
 }
 
 async function postUser(req, res) {
-  // Check for validation errors
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    console.log(req.body);
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   try {
     const document = {
       businessName: req.body.businessName,
@@ -54,7 +46,7 @@ async function postUser(req, res) {
       email: req.body.email,
       password: req.body.password,
       apiKey: req.body.apiKey,
-      profileImagePath: req.body.profileImagePath,
+      profileImagePath: req.body.imagePath || "",
       authToken: "",
       createdDate: new Date().toISOString(),
       lastUpdatedDate: new Date().toISOString(),
@@ -69,7 +61,7 @@ async function postUser(req, res) {
   }
 }
 
-async function patchUser(req, res) {
+async function putUser(req, res) {
   // Check for valid object id
   let id = req.params.id;
 
@@ -90,7 +82,7 @@ async function patchUser(req, res) {
     user.email = req.body.email;
     user.password = req.body.password;
     user.apiKey = req.body.apiKey;
-    user.profileImagePath = "";
+    user.profileImagePath = req.body.imagePath || "";
     user.authToken = "";
     user.lastUpdatedDate = new Date().toISOString();
     await user.save(req.body);
@@ -121,4 +113,10 @@ async function deleteUser(req, res) {
   }
 }
 
-module.exports = { getUsers, getUser, postUser, patchUser, deleteUser };
+module.exports = {
+  getUsers,
+  getUser,
+  postUser,
+  putUser,
+  deleteUser,
+};

@@ -1,47 +1,46 @@
 const { Router } = require("express");
 
+// Import middlewares
 const { createUserValidator } = require("../validation/users.validation");
-const {
-  validateObjectId,
-} = require("../middleware/validateObjectId.middleware");
+const { validateObjectId } = require("../middleware/objectId.middleware");
+const encrypt = require("../middleware/encryptData.middleware");
+const upload = require("../middleware/uploadImage.middleware");
+const { validateResult } = require("../middleware/validateResult.middleware");
 
-const {
-  encryptPassword,
-  encryptApiKey,
-} = require("../middleware/encryptData.middleware");
-
-const {
-  uploadImageFileWrapper,
-} = require("../middleware/uploadFile.middleware");
-
-const {
-  getUsers,
-  getUser,
-  postUser,
-  patchUser,
-  deleteUser,
-} = require("../controllers/users.controller");
+// Import controllers
+const userController = require("../controllers/users.controller");
 
 const usersRouter = Router();
+const imageFieldName = "profileImage";
 
-usersRouter.get("", getUsers);
-usersRouter.get("/:id", validateObjectId, getUser);
+// GET
+usersRouter.get("", userController.getUsers);
+usersRouter.get("/:id", validateObjectId, userController.getUser);
+
+// POST
 usersRouter.post(
   "",
-  uploadImageFileWrapper("profileImage"),
+  upload.uploadWrapper(imageFieldName),
   createUserValidator,
-  encryptPassword,
-  encryptApiKey,
-  postUser
+  validateResult,
+  encrypt.encryptPassword,
+  encrypt.encryptApiKey,
+  userController.postUser
 );
-usersRouter.patch(
+
+// PUT
+usersRouter.put(
   "/:id",
-  // createUserValidator,
-  encryptPassword,
-  encryptApiKey,
   validateObjectId,
-  patchUser
+  upload.uploadWrapper(imageFieldName),
+  createUserValidator,
+  validateResult,
+  encrypt.encryptPassword,
+  encrypt.encryptApiKey,
+  userController.putUser
 );
-usersRouter.delete("/:id", validateObjectId, deleteUser);
+
+// DELETE
+usersRouter.delete("/:id", validateObjectId, userController.deleteUser);
 
 module.exports = { usersRouter };

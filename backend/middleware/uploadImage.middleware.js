@@ -19,16 +19,28 @@ function fileName(req, file, cb) {
   const uniqueSuffix = Date.now();
   const ext = path.extname(file.originalname);
 
-  // Normalize business name
-  const businessName = req.body.businessName
-    .trim()
-    .toLowerCase()
-    .replaceAll(/[\"\'\\\/]/g, "")
-    .replaceAll(/\s+/g, "-");
+  let identity = "identity";
 
-  const profileImagePath = `${file.fieldname}-${businessName}-${uniqueSuffix}${ext}`;
-  req.body.profileImagePath = profileImagePath;
-  cb(null, profileImagePath);
+  if (req.body.businessName) {
+    // Normalize business name
+    identity = req.body.businessName
+      .trim()
+      .toLowerCase()
+      .replaceAll(/[\"\'\\\/]/g, "")
+      .replaceAll(/\s+/g, "-");
+  }
+
+  if (req.body.productName) {
+    identity = req.body.productName
+      .trim()
+      .toLowerCase()
+      .replaceAll(/[\"\'\\\/]/g, "")
+      .replaceAll(/\s+/g, "-");
+  }
+
+  const imagePath = `${file.fieldname}-${identity}-${uniqueSuffix}${ext}`;
+  req.body.imagePath = imagePath;
+  cb(null, imagePath);
 }
 
 function destination(req, file, cb) {
@@ -38,7 +50,7 @@ function destination(req, file, cb) {
 /**
  Returns a middleware for uploading files from an incoming request.
  */
-function uploadImageFileWrapper(fieldname) {
+function uploadWrapper(fieldname) {
   const storage = multer.diskStorage({
     destination: destination,
     filename: fileName,
@@ -65,4 +77,4 @@ function uploadImageFileWrapper(fieldname) {
   };
 }
 
-module.exports = { uploadImageFileWrapper };
+module.exports = { uploadWrapper };
