@@ -30,3 +30,21 @@ API.
 - [Account Signup/Edit](https://wireframe.cc/wk2Py6)
 - [Inventory Dashboard](https://wireframe.cc/gEhINv)
 - [Item Create/Edit](https://wireframe.cc/pfKdgn)
+
+## What is left
+
+1. build frontend components
+
+   - header
+   - login
+   - footer
+   - about
+   - account management
+   - account signup/edit
+   - inventory dashboard
+   - item create/edit
+
+   - sjk
+
+2. implement authentication
+3. deploy
