@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
-import { AuthModule } from './auth/auth.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { AccountModule } from './account/account.module';
 
@@ -14,7 +13,7 @@ import { AccountModule } from './account/account.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    AuthModule,
+    AccountModule,
     InventoryModule,
     AccountModule,
   ],
