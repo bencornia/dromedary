@@ -44,7 +44,5 @@ API.
    - inventory dashboard
    - item create/edit
 
-   - sjk
-
 2. implement authentication
 3. deploy
