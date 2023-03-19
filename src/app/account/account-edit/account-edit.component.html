@@ -1,1 +1,63 @@
-<p>account-edit works!</p>
+<form>
+  <div class="mb-3">
+    <label for="profile-image" class="form-label">Profile Image</label>
+    <input
+      type="file"
+      name="profile-image"
+      id="profile-image"
+      class="form-control"
+    />
+  </div>
+
+  <div class="mb-3">
+    <label for="owner-name" class="form-label">Owner Name</label>
+    <input type="text" name="owner-name" id="owner-name" class="form-control" />
+  </div>
+
+  <div class="mb-3">
+    <label for="business-name" class="form-label">Business Name</label>
+    <input
+      type="text"
+      name="business-name"
+      id="business-name"
+      class="form-control"
+    />
+  </div>
+
+  <div class="mb-3">
+    <label for="api-key" class="form-label">Square API Key</label>
+    <input type="password" name="api-key" id="api-key" class="form-control" />
+  </div>
+
+  <div class="mb-3">
+    <label for="email" class="form-label">Email</label>
+    <input
+      type="email"
+      name="email"
+      id="email"
+      class="form-control"
+      placeholder="name@example.com"
+      required
+    />
+  </div>
+
+  <div class="mb-3">
+    <label for="password" class="form-label">Password</label>
+    <input
+      type="password"
+      name="password"
+      id="password"
+      class="form-control"
+      required
+    />
+  </div>
+
+  <div class="mb-3">
+    <a href="#">forgot password?</a>
+  </div>
+  <button class="btn btn-primary mb-3">Login</button>
+
+  <div class="mb-3">
+    <a href="#">or signup</a>
+  </div>
+</form>
