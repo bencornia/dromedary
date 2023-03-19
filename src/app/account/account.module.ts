@@ -5,9 +5,15 @@ import { AccountEditComponent } from './account-edit/account-edit.component';
 import { AccountLoginComponent } from './account-login/account-login.component';
 import { AccountRouting } from './account-routing.module';
 import { AccountDetailComponent } from './account-detail/account-detail.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [AccountComponent, AccountEditComponent, AccountLoginComponent, AccountDetailComponent],
-  imports: [CommonModule, AccountRouting],
+  declarations: [
+    AccountComponent,
+    AccountEditComponent,
+    AccountLoginComponent,
+    AccountDetailComponent,
+  ],
+  imports: [CommonModule, FormsModule, AccountRouting],
 })
 export class AccountModule {}
