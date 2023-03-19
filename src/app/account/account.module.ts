@@ -4,9 +4,10 @@ import { AccountComponent } from './account.component';
 import { AccountEditComponent } from './account-edit/account-edit.component';
 import { AccountLoginComponent } from './account-login/account-login.component';
 import { AccountRouting } from './account-routing.module';
+import { AccountDetailComponent } from './account-detail/account-detail.component';
 
 @NgModule({
-  declarations: [AccountComponent, AccountEditComponent, AccountLoginComponent],
+  declarations: [AccountComponent, AccountEditComponent, AccountLoginComponent, AccountDetailComponent],
   imports: [CommonModule, AccountRouting],
 })
 export class AccountModule {}
