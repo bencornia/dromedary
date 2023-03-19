@@ -7,8 +7,8 @@ const routes: Routes = [
   {
     path: 'inventory',
     component: InventoryComponent,
-    children: [{ path: 'edit/:id', component: InventoryEditComponent }],
   },
+  { path: 'inventory/edit/:id', component: InventoryEditComponent },
 ];
 
 @NgModule({
