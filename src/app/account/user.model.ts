@@ -1,5 +1,5 @@
 export interface IUser {
-  profileImage?: string;
+  profileImage?: File;
   ownerName: string;
   businessName: string;
   email: string;

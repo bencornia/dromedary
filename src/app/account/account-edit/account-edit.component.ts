@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AccountService } from '../account.service';
-import { mimeType } from '../../shared/mime-type.validator';
+import { requiredFileTypes } from '../../shared/mime-type.validator';
+import { fileSizeValidator } from '../../shared/fileSize.validator';
+import { IUser } from '../user.model';
 
 @Component({
   selector: 'app-account-edit',
@@ -11,13 +13,19 @@ import { mimeType } from '../../shared/mime-type.validator';
 export class AccountEditComponent implements OnInit {
   form: FormGroup;
   imagePreview: string;
+  private mode: string = 'create';
 
   constructor(private accountService: AccountService) {}
 
   ngOnInit() {
     // Create reactive form template
     this.form = new FormGroup({
-      profileImage: new FormControl(null, { asyncValidators: [mimeType] }),
+      profileImage: new FormControl(null, {
+        validators: [
+          requiredFileTypes(['jpg', 'jpeg', 'png']),
+          fileSizeValidator,
+        ],
+      }),
       ownerName: new FormControl(null, { validators: [Validators.required] }),
       businessName: new FormControl(null, {
         validators: [Validators.required],
@@ -35,19 +43,32 @@ export class AccountEditComponent implements OnInit {
   onImagePicked(event: Event) {
     const file = (event.target as HTMLInputElement).files[0];
     this.form.patchValue({ profileImage: file });
-    this.profileImage.updateValueAndValidity();
+    this.form.get('profileImage').updateValueAndValidity();
 
     const reader = new FileReader();
 
-    const fileValue = new Promise((resolve, reject) => {
-      reader.onload = () => {
-        this.imagePreview = reader.result as string;
-      };
+    reader.onload = () => {
+      this.imagePreview = reader.result as string;
+    };
 
-      if (file) {
-        reader.readAsDataURL(file);
-      }
-    });
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  }
+
+  get imageErrorMessage() {
+    let errors = this.profileImage.errors;
+    let msg_string = '';
+
+    if (!errors) {
+      return msg_string;
+    }
+
+    for (let err in errors) {
+      msg_string += errors[err] + ' ';
+    }
+
+    return msg_string;
   }
 
   // Getters for form input validators
@@ -70,5 +91,15 @@ export class AccountEditComponent implements OnInit {
     return this.form.get('apiKey');
   }
 
-  onSaveAccount() {}
+  onSaveAccount() {
+    const userData: IUser = this.form.value;
+
+    if (this.mode === 'create') {
+      this.accountService.createUser(userData);
+    } else if (this.mode === 'update') {
+      this.accountService.updateUser(userData);
+    }
+
+    this.form.reset();
+  }
 }
