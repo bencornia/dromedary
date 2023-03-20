@@ -13,7 +13,7 @@ import { IUser } from '../user.model';
 export class AccountEditComponent implements OnInit {
   form: FormGroup;
   imagePreview: string;
-  private mode: string = 'create';
+  mode: string = 'signup';
 
   constructor(private accountService: AccountService) {}
 
@@ -34,7 +34,10 @@ export class AccountEditComponent implements OnInit {
         validators: [Validators.required, Validators.email],
       }),
       password: new FormControl(null, {
-        validators: [Validators.required, Validators.pattern('')],
+        validators: [
+          Validators.required,
+          Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/m),
+        ],
       }),
       apiKey: new FormControl(null),
     });

@@ -78,7 +78,8 @@
     <span
       class="form-text text-danger"
       *ngIf="password.invalid && password.touched"
-      >Please enter a valid password!</span
+      >Password must be minimum eight characters, at least one letter, one
+      number and no leading or trailing spaces</span
     >
   </div>
 
@@ -92,13 +93,21 @@
       formControlName="apiKey"
     />
   </div>
+  <div *ngIf="mode === 'signup'">
+    <button class="btn btn-primary mb-3" [disabled]="!form.valid">
+      Sign Up
+    </button>
 
-  <div class="mb-3">
-    <a href="#">forgot password?</a>
+    <div class="mb-3">
+      <a href="#">or login</a>
+    </div>
   </div>
-  <button class="btn btn-primary mb-3" [disabled]="!form.valid">Login</button>
 
-  <div class="mb-3">
-    <a href="#">or signup</a>
-  </div>
+  <button
+    *ngIf="mode === 'edit'"
+    class="btn btn-primary mb-3"
+    [disabled]="!form.valid"
+  >
+    Update Information
+  </button>
 </form>
