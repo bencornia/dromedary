@@ -7,6 +7,7 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { InventoryModule } from './inventory/inventory.module';
 import { AccountModule } from './account/account.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent, FooterComponent],
@@ -16,6 +17,7 @@ import { AccountModule } from './account/account.module';
     AccountModule,
     InventoryModule,
     AccountModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

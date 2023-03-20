@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { AccountService } from '../account.service';
 
 @Component({
   selector: 'app-account-login',
@@ -7,9 +7,5 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./account-login.component.css'],
 })
 export class AccountLoginComponent {
-  onLogin(form: NgForm) {
-    console.log(form.value);
-
-    form.reset();
-  }
+  constructor(private accountService: AccountService) {}
 }

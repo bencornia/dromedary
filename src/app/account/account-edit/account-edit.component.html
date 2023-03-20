@@ -1,32 +1,54 @@
-<form>
+<form [formGroup]="form" (submit)="onSaveAccount()">
   <div class="mb-3">
-    <label for="profile-image" class="form-label">Profile Image</label>
+    <label for="profileImage" class="form-label">Profile Image</label>
+    <div
+      class="image-preview"
+      *ngIf="imagePreview !== '' && imagePreview && profileImage.valid"
+    >
+      <img [src]="imagePreview" alt="image preview" />
+    </div>
     <input
       type="file"
-      name="profile-image"
-      id="profile-image"
+      name="profileImage"
+      id="profileImage"
       class="form-control"
+      (change)="onImagePicked($event)"
     />
+    <span class="form-text text-danger" *ngIf="profileImage.invalid"
+      >Please enter a valid image type (png, jpg) under 2kb!</span
+    >
   </div>
 
   <div class="mb-3">
-    <label for="owner-name" class="form-label">Owner Name</label>
-    <input type="text" name="owner-name" id="owner-name" class="form-control" />
-  </div>
-
-  <div class="mb-3">
-    <label for="business-name" class="form-label">Business Name</label>
+    <label for="ownerName" class="form-label">Owner Name</label>
     <input
       type="text"
-      name="business-name"
-      id="business-name"
+      name="ownerName"
+      id="ownerName"
       class="form-control"
+      formControlName="ownerName"
     />
+    <span
+      class="form-text text-danger"
+      *ngIf="ownerName.invalid && ownerName.touched"
+      >Please enter a valid owner name!</span
+    >
   </div>
 
   <div class="mb-3">
-    <label for="api-key" class="form-label">Square API Key</label>
-    <input type="password" name="api-key" id="api-key" class="form-control" />
+    <label for="businessName" class="form-label">Business Name</label>
+    <input
+      type="text"
+      name="businessName"
+      id="businessName"
+      class="form-control"
+      formControlName="businessName"
+    />
+    <span
+      class="form-text text-danger"
+      *ngIf="businessName.invalid && businessName.touched"
+      >Please enter a valid business name!</span
+    >
   </div>
 
   <div class="mb-3">
@@ -36,26 +58,45 @@
       name="email"
       id="email"
       class="form-control"
-      placeholder="name@example.com"
-      required
+      formControlName="email"
     />
+    <span class="form-text text-danger" *ngIf="email.invalid && email.touched"
+      >Please enter a valid email!</span
+    >
   </div>
 
   <div class="mb-3">
+    <!-- password must be minimum eight characters, at least one letter and one number -->
     <label for="password" class="form-label">Password</label>
     <input
       type="password"
       name="password"
       id="password"
       class="form-control"
-      required
+      formControlName="password"
+    />
+    <span
+      class="form-text text-danger"
+      *ngIf="password.invalid && password.touched"
+      >Please enter a valid password!</span
+    >
+  </div>
+
+  <div class="mb-3">
+    <label for="apiKey" class="form-label">Square API Key</label>
+    <input
+      type="password"
+      name="apiKey"
+      id="apiKey"
+      class="form-control"
+      formControlName="apiKey"
     />
   </div>
 
   <div class="mb-3">
     <a href="#">forgot password?</a>
   </div>
-  <button class="btn btn-primary mb-3">Login</button>
+  <button class="btn btn-primary mb-3" [disabled]="!form.valid">Login</button>
 
   <div class="mb-3">
     <a href="#">or signup</a>
