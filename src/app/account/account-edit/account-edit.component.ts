@@ -97,9 +97,9 @@ export class AccountEditComponent implements OnInit {
   onSaveAccount() {
     const userData: IUser = this.form.value;
 
-    if (this.mode === 'create') {
+    if (this.mode === 'signup') {
       this.accountService.createUser(userData);
-    } else if (this.mode === 'update') {
+    } else if (this.mode === 'edit') {
       this.accountService.updateUser(userData);
     }
 

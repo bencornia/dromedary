@@ -10,12 +10,24 @@ export class AccountService {
 
   createUser(user: IUser) {
     const formData = new FormData();
-    formData.append('profileImage', user.profileImage, 'userprofileimage');
+
+    // Append optional fields
+    if (user.profileImage) {
+      formData.append(
+        'profileImage',
+        user.profileImage,
+        user.profileImage.name
+      );
+    }
+
+    if (user.apiKey) {
+      formData.append('apiKey', user.apiKey);
+    }
+
     formData.append('ownerName', user.ownerName);
     formData.append('businessName', user.businessName);
     formData.append('email', user.email);
     formData.append('password', user.password);
-    formData.append('apiKey', user.apiKey);
 
     this.http
       .post('http://localhost:3000/api/users', formData)

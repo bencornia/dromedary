@@ -13,6 +13,11 @@ async function encryptPassword(req, res, next) {
 }
 
 async function encryptApiKey(req, res, next) {
+  if (!req.body.apiKey) {
+    next();
+    return;
+  }
+
   // Hash apikey
   try {
     req.body.apiKey = await bcrypt.hash(req.body.apiKey, 10);

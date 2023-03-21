@@ -19,26 +19,7 @@ function fileName(req, file, cb) {
   const uniqueSuffix = Date.now();
   const ext = path.extname(file.originalname);
 
-  let identity = "identity";
-
-  if (req.body.businessName) {
-    // Normalize business name
-    identity = req.body.businessName
-      .trim()
-      .toLowerCase()
-      .replaceAll(/[\"\'\\\/]/g, "")
-      .replaceAll(/\s+/g, "-");
-  }
-
-  if (req.body.productName) {
-    identity = req.body.productName
-      .trim()
-      .toLowerCase()
-      .replaceAll(/[\"\'\\\/]/g, "")
-      .replaceAll(/\s+/g, "-");
-  }
-
-  const imagePath = `${file.fieldname}-${identity}-${uniqueSuffix}${ext}`;
+  const imagePath = `${file.fieldname}-${uniqueSuffix}${ext}`;
   req.body.imagePath = imagePath;
   cb(null, imagePath);
 }

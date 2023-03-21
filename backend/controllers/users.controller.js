@@ -1,5 +1,6 @@
 const { User } = require("../models/users.model");
 const { handleServerError } = require("../middleware/serverError");
+const { deleteImage } = require("../helpers/deleteImage.helper");
 
 async function getUsers(req, res) {
   try {
@@ -52,10 +53,21 @@ async function postUser(req, res) {
       lastUpdatedDate: new Date().toISOString(),
     };
 
+    // Check for existing user
+    const existing = await User.exists({ email: req.body.email });
+
+    if (existing) {
+      deleteImage(req.body.imagePath);
+      return res.status(400).json({ error: "Email already exists!" });
+    }
+
     const user = await User.create(document);
 
     return res.status(201).json({ id: user._id });
   } catch (error) {
+    // Delete image
+    deleteImage(req.body.imagePath);
+
     // Document Creation failed
     return handleServerError(res, error);
   }
