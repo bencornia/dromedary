@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
+  loggedIn = false;
+
   constructor(private http: HttpClient) {}
 
   login() {}
@@ -48,6 +50,10 @@ export class AccountService {
     this.http
       .put('http://localhost:3000/api/users', formData)
       .subscribe((responseData) => {
+        /*********************************
+         * How do I know once the request has completed?
+         ********************************/
+
         console.log(responseData);
       });
   }
