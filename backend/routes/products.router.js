@@ -16,47 +16,47 @@ const productImageFieldName = "productImage";
 // GET
 productsRouter.get("", checkAuth, prodController.getAllProducts);
 productsRouter.get(
-  "/business/:id",
-  validateObjectId,
-  prodController.getProductsByBusiness
+    "/business/:id",
+    validateObjectId,
+    prodController.getProductsByBusiness
 );
 
 // GET by id
 productsRouter.get(
-  "/:id",
-  checkAuth,
-  validateObjectId,
-  prodController.getProduct
+    "/:id",
+    checkAuth,
+    validateObjectId,
+    prodController.getProduct
 );
 
 // POST
 productsRouter.post(
-  "/:id",
-  checkAuth,
-  uploadWrapper(productImageFieldName),
-  validateObjectId,
-  body("productName").not().isEmpty().escape(),
-  validateResult,
-  prodController.postProduct
+    "/:id",
+    checkAuth,
+    uploadWrapper(productImageFieldName),
+    validateObjectId,
+    body("productName").not().isEmpty().escape(),
+    validateResult,
+    prodController.postProduct
 );
 
 // PUT
 productsRouter.put(
-  "/:id",
-  checkAuth,
-  uploadWrapper(productImageFieldName),
-  validateObjectId,
-  body("productName").not().isEmpty().escape(),
-  validateResult,
-  prodController.putProduct
+    "/:id",
+    checkAuth,
+    uploadWrapper(productImageFieldName),
+    validateObjectId,
+    body("productName").not().isEmpty().escape(),
+    validateResult,
+    prodController.putProduct
 );
 
 // DELETE
 productsRouter.delete(
-  "/:id",
-  checkAuth,
-  validateObjectId,
-  prodController.deleteProduct
+    "/:id",
+    checkAuth,
+    validateObjectId,
+    prodController.deleteProduct
 );
 
 module.exports = { productsRouter };

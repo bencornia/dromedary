@@ -1,113 +1,115 @@
 <form [formGroup]="form" (submit)="onSaveAccount()">
-  <div class="mb-3">
-    <label for="profileImage" class="form-label">Profile Image</label>
-    <div
-      class="image-preview"
-      *ngIf="imagePreview !== '' && imagePreview && profileImage.valid"
-    >
-      <img [src]="imagePreview" alt="image preview" />
+    <div class="mb-3">
+        <label for="profileImage" class="form-label">Profile Image</label>
+        <div
+            class="image-preview"
+            *ngIf="imagePreview !== '' && imagePreview && profileImage.valid"
+        >
+            <img [src]="imagePreview" alt="image preview" />
+        </div>
+        <input
+            type="file"
+            name="profileImage"
+            id="profileImage"
+            class="form-control"
+            (change)="onImagePicked($event)"
+        />
+        <span class="form-text text-danger" *ngIf="profileImage.invalid">{{
+            imageErrorMessage
+        }}</span>
     </div>
-    <input
-      type="file"
-      name="profileImage"
-      id="profileImage"
-      class="form-control"
-      (change)="onImagePicked($event)"
-    />
-    <span class="form-text text-danger" *ngIf="profileImage.invalid">{{
-      imageErrorMessage
-    }}</span>
-  </div>
-
-  <div class="mb-3">
-    <label for="ownerName" class="form-label">Owner Name</label>
-    <input
-      type="text"
-      name="ownerName"
-      id="ownerName"
-      class="form-control"
-      formControlName="ownerName"
-    />
-    <span
-      class="form-text text-danger"
-      *ngIf="ownerName.invalid && ownerName.touched"
-      >Please enter a valid owner name!</span
-    >
-  </div>
-
-  <div class="mb-3">
-    <label for="businessName" class="form-label">Business Name</label>
-    <input
-      type="text"
-      name="businessName"
-      id="businessName"
-      class="form-control"
-      formControlName="businessName"
-    />
-    <span
-      class="form-text text-danger"
-      *ngIf="businessName.invalid && businessName.touched"
-      >Please enter a valid business name!</span
-    >
-  </div>
-
-  <div class="mb-3">
-    <label for="email" class="form-label">Email</label>
-    <input
-      type="email"
-      name="email"
-      id="email"
-      class="form-control"
-      formControlName="email"
-    />
-    <span class="form-text text-danger" *ngIf="email.invalid && email.touched"
-      >Please enter a valid email!</span
-    >
-  </div>
-
-  <div class="mb-3">
-    <!-- password must be minimum eight characters, at least one letter and one number -->
-    <label for="password" class="form-label">Password</label>
-    <input
-      type="password"
-      name="password"
-      id="password"
-      class="form-control"
-      formControlName="password"
-    />
-    <span
-      class="form-text text-danger"
-      *ngIf="password.invalid && password.touched"
-      >Password must be minimum eight characters, at least one letter, one
-      number and one special character</span
-    >
-  </div>
-
-  <div class="mb-3">
-    <label for="apiKey" class="form-label">Square API Key</label>
-    <input
-      type="password"
-      name="apiKey"
-      id="apiKey"
-      class="form-control"
-      formControlName="apiKey"
-    />
-  </div>
-  <div *ngIf="mode === 'signup'">
-    <button class="btn btn-primary mb-3" [disabled]="!form.valid">
-      Sign Up
-    </button>
 
     <div class="mb-3">
-      <a href="#">or login</a>
+        <label for="ownerName" class="form-label">Owner Name</label>
+        <input
+            type="text"
+            name="ownerName"
+            id="ownerName"
+            class="form-control"
+            formControlName="ownerName"
+        />
+        <span
+            class="form-text text-danger"
+            *ngIf="ownerName.invalid && ownerName.touched"
+            >Please enter a valid owner name!</span
+        >
     </div>
-  </div>
 
-  <button
-    *ngIf="mode === 'edit'"
-    class="btn btn-primary mb-3"
-    [disabled]="!form.valid"
-  >
-    Update Information
-  </button>
+    <div class="mb-3">
+        <label for="businessName" class="form-label">Business Name</label>
+        <input
+            type="text"
+            name="businessName"
+            id="businessName"
+            class="form-control"
+            formControlName="businessName"
+        />
+        <span
+            class="form-text text-danger"
+            *ngIf="businessName.invalid && businessName.touched"
+            >Please enter a valid business name!</span
+        >
+    </div>
+
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input
+            type="email"
+            name="email"
+            id="email"
+            class="form-control"
+            formControlName="email"
+        />
+        <span
+            class="form-text text-danger"
+            *ngIf="email.invalid && email.touched"
+            >Please enter a valid email!</span
+        >
+    </div>
+
+    <div class="mb-3">
+        <!-- password must be minimum eight characters, at least one letter and one number -->
+        <label for="password" class="form-label">Password</label>
+        <input
+            type="password"
+            name="password"
+            id="password"
+            class="form-control"
+            formControlName="password"
+        />
+        <span
+            class="form-text text-danger"
+            *ngIf="password.invalid && password.touched"
+            >Password must be minimum eight characters, at least one letter, one
+            number and one special character</span
+        >
+    </div>
+
+    <div class="mb-3">
+        <label for="apiKey" class="form-label">Square API Key</label>
+        <input
+            type="password"
+            name="apiKey"
+            id="apiKey"
+            class="form-control"
+            formControlName="apiKey"
+        />
+    </div>
+    <div *ngIf="mode === 'signup'">
+        <button class="btn btn-primary mb-3" [disabled]="!form.valid">
+            Sign Up
+        </button>
+
+        <div class="mb-3">
+            <a href="#">or login</a>
+        </div>
+    </div>
+
+    <button
+        *ngIf="mode === 'edit'"
+        class="btn btn-primary mb-3"
+        [disabled]="!form.valid"
+    >
+        Update Information
+    </button>
 </form>

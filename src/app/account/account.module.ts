@@ -8,17 +8,17 @@ import { AccountDetailComponent } from './account-detail/account-detail.componen
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    AccountComponent,
-    AccountEditComponent,
-    AccountLoginComponent,
-    AccountDetailComponent,
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AccountRoutingModule,
-  ],
+    declarations: [
+        AccountComponent,
+        AccountEditComponent,
+        AccountLoginComponent,
+        AccountDetailComponent,
+    ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        AccountRoutingModule,
+    ],
 })
 export class AccountModule {}

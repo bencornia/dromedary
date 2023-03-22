@@ -4,15 +4,15 @@ import { InventoryEditComponent } from './inventory-edit/inventory-edit.componen
 import { InventoryComponent } from './inventory.component';
 
 const routes: Routes = [
-  {
-    path: 'inventory',
-    component: InventoryComponent,
-  },
-  { path: 'inventory/edit/:id', component: InventoryEditComponent },
+    {
+        path: 'inventory',
+        component: InventoryComponent,
+    },
+    { path: 'inventory/edit/:id', component: InventoryEditComponent },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
 export class InventoryRoutingModule {}

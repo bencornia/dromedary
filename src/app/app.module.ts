@@ -12,18 +12,22 @@ import { AccountModule } from './account/account.module';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, FooterComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    AccountModule,
-    InventoryModule,
-    AccountModule,
-    HttpClientModule,
-  ],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AccountInterceptor, multi: true },
-  ],
-  bootstrap: [AppComponent],
+    declarations: [AppComponent, HeaderComponent, FooterComponent],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        AccountModule,
+        InventoryModule,
+        AccountModule,
+        HttpClientModule,
+    ],
+    providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AccountInterceptor,
+            multi: true,
+        },
+    ],
+    bootstrap: [AppComponent],
 })
 export class AppModule {}

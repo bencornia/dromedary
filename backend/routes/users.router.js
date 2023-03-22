@@ -20,25 +20,25 @@ usersRouter.get("/:id", validateObjectId, userController.getUser);
 
 // POST
 usersRouter.post(
-  "",
-  upload.uploadWrapper(imageFieldName),
-  createUserValidator,
-  validateResult,
-  encrypt.encryptPassword,
-  encrypt.encryptApiKey,
-  userController.postUser
+    "",
+    upload.uploadWrapper(imageFieldName),
+    createUserValidator,
+    validateResult,
+    encrypt.encryptPassword,
+    encrypt.encryptApiKey,
+    userController.postUser
 );
 
 // PUT
 usersRouter.put(
-  "/:id",
-  validateObjectId,
-  upload.uploadWrapper(imageFieldName),
-  createUserValidator,
-  validateResult,
-  encrypt.encryptPassword,
-  encrypt.encryptApiKey,
-  userController.putUser
+    "/:id",
+    validateObjectId,
+    upload.uploadWrapper(imageFieldName),
+    createUserValidator,
+    validateResult,
+    encrypt.encryptPassword,
+    encrypt.encryptApiKey,
+    userController.putUser
 );
 
 // DELETE

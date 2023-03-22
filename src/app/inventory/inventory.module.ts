@@ -7,12 +7,12 @@ import { InventoryListComponent } from './inventory-list/inventory-list.componen
 import { InventoryItemComponent } from './inventory-list/inventory-item/inventory-item.component';
 
 @NgModule({
-  declarations: [
-    InventoryComponent,
-    InventoryEditComponent,
-    InventoryListComponent,
-    InventoryItemComponent,
-  ],
-  imports: [CommonModule, InventoryRoutingModule],
+    declarations: [
+        InventoryComponent,
+        InventoryEditComponent,
+        InventoryListComponent,
+        InventoryItemComponent,
+    ],
+    imports: [CommonModule, InventoryRoutingModule],
 })
 export class InventoryModule {}

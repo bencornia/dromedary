@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-inventory-item',
-  templateUrl: './inventory-item.component.html',
-  styleUrls: ['./inventory-item.component.css']
+    selector: 'app-inventory-item',
+    templateUrl: './inventory-item.component.html',
+    styleUrls: ['./inventory-item.component.css'],
 })
-export class InventoryItemComponent {
-
-}
+export class InventoryItemComponent {}

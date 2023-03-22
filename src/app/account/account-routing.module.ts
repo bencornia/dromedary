@@ -6,15 +6,15 @@ import { AccountLoginComponent } from './account-login/account-login.component';
 import { AccountComponent } from './account.component';
 
 const routes: Routes = [
-  {
-    path: 'account',
-    component: AccountComponent,
-    children: [
-      { path: '', component: AccountDetailComponent },
-      { path: 'login', component: AccountLoginComponent },
-      { path: 'edit', component: AccountEditComponent },
-    ],
-  },
+    {
+        path: 'account',
+        component: AccountComponent,
+        children: [
+            { path: '', component: AccountDetailComponent },
+            { path: 'login', component: AccountLoginComponent },
+            { path: 'edit', component: AccountEditComponent },
+        ],
+    },
 ];
 
 @NgModule({ imports: [RouterModule.forChild(routes)], exports: [RouterModule] })

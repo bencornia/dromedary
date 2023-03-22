@@ -26,5 +26,5 @@ connectDB().catch((err) => console.log("[ database ]:" + err));
 
 // Start server
 app.listen(port, () => {
-  console.log(`[  server  ]: listening on port ${port}...`);
+    console.log(`[  server  ]: listening on port ${port}...`);
 });

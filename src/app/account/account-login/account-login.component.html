@@ -1,39 +1,41 @@
 <form [formGroup]="form" (submit)="onLogin()">
-  <div class="mb-3">
-    <label for="email" class="form-label">Email</label>
-    <input
-      type="email"
-      name="email"
-      id="email"
-      class="form-control"
-      formControlName="email"
-    />
-    <span class="form-text text-danger" *ngIf="email.invalid && email.touched"
-      >Please enter a valid email!</span
-    >
-  </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input
+            type="email"
+            name="email"
+            id="email"
+            class="form-control"
+            formControlName="email"
+        />
+        <span
+            class="form-text text-danger"
+            *ngIf="email.invalid && email.touched"
+            >Please enter a valid email!</span
+        >
+    </div>
 
-  <div class="mb-3">
-    <!-- password must be minimum eight characters, at least one letter and one number -->
-    <label for="password" class="form-label">Password</label>
-    <input
-      type="password"
-      name="password"
-      id="password"
-      class="form-control"
-      formControlName="password"
-    />
-    <span
-      class="form-text text-danger"
-      *ngIf="password.invalid && password.touched"
-      >Password must be minimum eight characters, at least one letter, one
-      number and one special character</span
-    >
-  </div>
+    <div class="mb-3">
+        <!-- password must be minimum eight characters, at least one letter and one number -->
+        <label for="password" class="form-label">Password</label>
+        <input
+            type="password"
+            name="password"
+            id="password"
+            class="form-control"
+            formControlName="password"
+        />
+        <span
+            class="form-text text-danger"
+            *ngIf="password.invalid && password.touched"
+            >Password must be minimum eight characters, at least one letter, one
+            number and one special character</span
+        >
+    </div>
 
-  <button class="btn btn-primary mb-3" [disabled]="!form.valid">Login</button>
+    <button class="btn btn-primary mb-3" [disabled]="!form.valid">Login</button>
 
-  <div class="mb-3">
-    <a href="#">or signup</a>
-  </div>
+    <div class="mb-3">
+        <a href="#">or signup</a>
+    </div>
 </form>
