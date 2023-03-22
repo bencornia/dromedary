@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const express = require("express");
 
 // Import middlewares
 const { createUserValidator } = require("../validation/users.validation");
@@ -42,5 +43,8 @@ usersRouter.put(
 
 // DELETE
 usersRouter.delete("/:id", validateObjectId, userController.deleteUser);
+
+// login
+usersRouter.post("/login", express.json(), userController.login);
 
 module.exports = { usersRouter };

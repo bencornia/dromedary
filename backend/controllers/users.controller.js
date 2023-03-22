@@ -1,3 +1,7 @@
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+const { config } = require("../config/config");
 const { User } = require("../models/users.model");
 const { handleServerError } = require("../middleware/serverError");
 const { deleteImage } = require("../helpers/deleteImage.helper");
@@ -137,10 +141,45 @@ async function deleteUser(req, res) {
   }
 }
 
+// Handle login
+async function login(req, res, next) {
+  try {
+    const password = req.body.password;
+    const email = req.body.email;
+
+    // Check for existing user
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return res.status(401).json({ message: "User does not exist!" });
+    }
+
+    // Compare password
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) {
+      return res.status(401).json({ message: "Authentication failed!" });
+    }
+
+    // Create jwt
+    const token = jwt.sign(
+      { email: user.email, userId: user._id },
+      config.secretKey,
+      { expiresIn: "1h" }
+    );
+
+    // Send success response
+    return res.status(200).json({
+      token: token,
+    });
+  } catch (error) {
+    handleServerError(res, error);
+  }
+}
+
 module.exports = {
   getUsers,
   getUser,
   postUser,
   putUser,
   deleteUser,
+  login,
 };
