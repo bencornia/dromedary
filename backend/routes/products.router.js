@@ -5,6 +5,7 @@ const { body } = require("express-validator");
 const { validateObjectId } = require("../middleware/objectId.middleware");
 const { uploadWrapper } = require("../middleware/uploadImage.middleware");
 const { validateResult } = require("../middleware/validateResult.middleware");
+const { checkAuth } = require("../middleware/checkAuth.middleware");
 
 // Import controllers
 const prodController = require("../controllers/products.controller");
@@ -13,17 +14,25 @@ const productsRouter = Router();
 const productImageFieldName = "productImage";
 
 // GET
-productsRouter.get("", prodController.getAllProducts);
+productsRouter.get("", checkAuth, prodController.getAllProducts);
 productsRouter.get(
   "/business/:id",
   validateObjectId,
   prodController.getProductsByBusiness
 );
-productsRouter.get("/:id", validateObjectId, prodController.getProduct);
+
+// GET by id
+productsRouter.get(
+  "/:id",
+  checkAuth,
+  validateObjectId,
+  prodController.getProduct
+);
 
 // POST
 productsRouter.post(
   "/:id",
+  checkAuth,
   uploadWrapper(productImageFieldName),
   validateObjectId,
   body("productName").not().isEmpty().escape(),
@@ -34,6 +43,7 @@ productsRouter.post(
 // PUT
 productsRouter.put(
   "/:id",
+  checkAuth,
   uploadWrapper(productImageFieldName),
   validateObjectId,
   body("productName").not().isEmpty().escape(),
@@ -42,6 +52,11 @@ productsRouter.put(
 );
 
 // DELETE
-productsRouter.delete("/:id", validateObjectId, prodController.deleteProduct);
+productsRouter.delete(
+  "/:id",
+  checkAuth,
+  validateObjectId,
+  prodController.deleteProduct
+);
 
 module.exports = { productsRouter };

@@ -4,6 +4,7 @@ const cors = require("cors");
 const { indexRouter } = require("./routes/index.router");
 const { notFound } = require("./controllers/not-found.controller");
 const { connectDB } = require("./models/connection");
+const { setHeaders } = require("./middleware/setHeaders.middleware");
 
 // Create app
 const app = express();

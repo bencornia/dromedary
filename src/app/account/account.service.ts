@@ -1,23 +1,39 @@
 import { Injectable } from '@angular/core';
 import { IUser } from './user.model';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError, Observable, ObservableInput, tap } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { AuthResponse } from './user.model';
+import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
-  loggedIn = false;
+  private _token: string;
+  private authStatusListener = new Subject<boolean>();
 
   constructor(private http: HttpClient) {}
 
+  getAuthStatusListener() {
+    return this.authStatusListener.asObservable();
+  }
+
+  get token() {
+    return this._token;
+  }
+
+  set token(val: string) {
+    this._token = val;
+  }
+
   login(email: string, password: string) {
     this.http
-      .post('http://localhost:3000/api/users/login', {
+      .post<{ token: string }>('http://localhost:3000/api/users/login', {
         email,
         password,
       })
       .subscribe((resData) => {
-        console.log(resData);
+        this.token = resData.token;
+
+        // Update login status
+        this.authStatusListener.next(true);
       });
   }
 
