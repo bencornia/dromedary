@@ -10,7 +10,16 @@ export class AccountService {
 
   constructor(private http: HttpClient) {}
 
-  login() {}
+  login(email: string, password: string) {
+    this.http
+      .post('http://localhost:3000/api/users/login', {
+        email,
+        password,
+      })
+      .subscribe((resData) => {
+        console.log(resData);
+      });
+  }
 
   createUser(user: IUser) {
     const formData = new FormData();

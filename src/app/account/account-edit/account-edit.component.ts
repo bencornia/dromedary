@@ -38,7 +38,9 @@ export class AccountEditComponent implements OnInit {
       password: new FormControl(null, {
         validators: [
           Validators.required,
-          Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/m),
+          Validators.pattern(
+            /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/m
+          ),
         ],
       }),
       apiKey: new FormControl(null),
