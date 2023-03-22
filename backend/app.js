@@ -10,9 +10,13 @@ const app = express();
 
 const port = process.env.PORT || 3000;
 
-// Set up routing
-// app.use(express.json());
+// Set CORS policy
 app.use(cors());
+
+// Mount images on separate route
+app.use("/images", express.static("uploads"));
+
+// Set up routing
 app.use("/api", indexRouter);
 app.use("*", notFound);
 

@@ -41,13 +41,17 @@ async function getUser(req, res) {
 
 async function postUser(req, res) {
   try {
+    const imagePath = `${req.protocol}://${req.get("host")}/images/${
+      req.body.imagePath
+    }`;
+
     const document = {
       businessName: req.body.businessName,
       ownerName: req.body.ownerName,
       email: req.body.email,
       password: req.body.password,
       apiKey: req.body.apiKey,
-      profileImagePath: req.body.imagePath || "",
+      profileImagePath: imagePath,
       authToken: "",
       createdDate: new Date().toISOString(),
       lastUpdatedDate: new Date().toISOString(),
@@ -63,7 +67,15 @@ async function postUser(req, res) {
 
     const user = await User.create(document);
 
-    return res.status(201).json({ id: user._id });
+    const authResponse = {
+      profileImagePath: user.profileImagePath,
+      ownerName: user.ownerName,
+      businessName: user.businessName,
+      email: user.email,
+      apiKey: user.apiKey,
+    };
+
+    return res.status(201).json(authResponse);
   } catch (error) {
     // Delete image
     deleteImage(req.body.imagePath);

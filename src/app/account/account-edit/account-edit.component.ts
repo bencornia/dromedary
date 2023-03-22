@@ -3,7 +3,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AccountService } from '../account.service';
 import { requiredFileTypes } from '../../shared/mime-type.validator';
 import { fileSizeValidator } from '../../shared/fileSize.validator';
-import { IUser } from '../user.model';
+import { IUser, AuthResponse } from '../user.model';
+import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-account-edit',
@@ -15,7 +17,7 @@ export class AccountEditComponent implements OnInit {
   imagePreview: string;
   mode: string = 'signup';
 
-  constructor(private accountService: AccountService) {}
+  constructor(private accountService: AccountService, private router: Router) {}
 
   ngOnInit() {
     // Create reactive form template
@@ -59,6 +61,24 @@ export class AccountEditComponent implements OnInit {
     }
   }
 
+  onSaveAccount() {
+    // Don't allow invalid form to be submitted
+    if (!this.form.valid) {
+      return;
+    }
+
+    const userData: IUser = this.form.value;
+
+    // We are either signing up or updating our account
+    if (this.mode === 'signup') {
+      this.accountService.createUser(userData);
+    } else if (this.mode === 'edit') {
+      this.accountService.updateUser(userData);
+    }
+
+    this.form.reset();
+  }
+
   get imageErrorMessage() {
     let errors = this.profileImage.errors;
     let msg_string = '';
@@ -92,17 +112,5 @@ export class AccountEditComponent implements OnInit {
   }
   get apiKey() {
     return this.form.get('apiKey');
-  }
-
-  onSaveAccount() {
-    const userData: IUser = this.form.value;
-
-    if (this.mode === 'signup') {
-      this.accountService.createUser(userData);
-    } else if (this.mode === 'edit') {
-      this.accountService.updateUser(userData);
-    }
-
-    this.form.reset();
   }
 }
