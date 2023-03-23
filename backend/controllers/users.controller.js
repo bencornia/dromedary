@@ -170,7 +170,7 @@ async function login(req, res, next) {
             email: user.email,
             apiKey: user.apiKey,
             token: token,
-            expiration: new Date().getTime() + 360000,
+            expiration: Date.now() + 360000,
         };
 
         // Send success response
