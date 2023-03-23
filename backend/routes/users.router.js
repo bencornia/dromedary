@@ -25,7 +25,6 @@ usersRouter.post(
     createUserValidator,
     validateResult,
     encrypt.encryptPassword,
-    encrypt.encryptApiKey,
     userController.postUser
 );
 

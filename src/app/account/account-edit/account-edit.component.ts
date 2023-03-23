@@ -3,8 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AccountService } from '../account.service';
 import { requiredFileTypes } from '../../shared/mime-type.validator';
 import { fileSizeValidator } from '../../shared/fileSize.validator';
-import { IUser, AuthResponse } from '../user.model';
-import { Observable } from 'rxjs';
+import { IUser } from '../user.model';
 import { Router } from '@angular/router';
 
 @Component({

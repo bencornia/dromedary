@@ -8,7 +8,6 @@ const userSchema = new Schema({
     password: String,
     apiKey: String,
     profileImagePath: String,
-    authToken: String,
     createdDate: String,
     lastUpdatedDate: String,
 });

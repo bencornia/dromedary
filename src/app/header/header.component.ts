@@ -9,19 +9,23 @@ import { AccountService } from '../account/account.service';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
     private authListenerSubs: Subscription;
-    userIsAuthenticated = false;
+    isAuthenticated = false;
 
     constructor(private accountService: AccountService) {}
 
     ngOnInit(): void {
-        this.authListenerSubs = this.accountService
-            .getAuthStatusListener()
-            .subscribe((isAuthenticated) => {
-                this.userIsAuthenticated = isAuthenticated;
-            });
+        this.authListenerSubs = this.accountService.accountData.subscribe(
+            (accountData) => {
+                this.isAuthenticated = !accountData ? false : true;
+            }
+        );
     }
 
     ngOnDestroy(): void {
         this.authListenerSubs.unsubscribe();
+    }
+
+    onLogout() {
+        this.accountService.logout();
     }
 }

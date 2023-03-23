@@ -45,7 +45,12 @@ async function getUser(req, res) {
 
 async function postUser(req, res) {
     try {
-        const imagePath = `${req.protocol}://${req.get("host")}/images/${
+        // Set default profile image
+        if (!req.body.imagePath) {
+            req.body.imagePath = "default-profile.png";
+        }
+
+        imagePath = `${req.protocol}://${req.get("host")}/images/${
             req.body.imagePath
         }`;
 
@@ -56,7 +61,6 @@ async function postUser(req, res) {
             password: req.body.password,
             apiKey: req.body.apiKey,
             profileImagePath: imagePath,
-            authToken: "",
             createdDate: new Date().toISOString(),
             lastUpdatedDate: new Date().toISOString(),
         };
@@ -69,17 +73,10 @@ async function postUser(req, res) {
             return res.status(400).json({ error: "Email already exists!" });
         }
 
+        // Create a new user
         const user = await User.create(document);
 
-        const authResponse = {
-            profileImagePath: user.profileImagePath,
-            ownerName: user.ownerName,
-            businessName: user.businessName,
-            email: user.email,
-            apiKey: user.apiKey,
-        };
-
-        return res.status(201).json(authResponse);
+        return res.status(201).json({ id: user._id });
     } catch (error) {
         // Delete image
         deleteImage(req.body.imagePath);
@@ -110,8 +107,7 @@ async function putUser(req, res) {
         user.email = req.body.email;
         user.password = req.body.password;
         user.apiKey = req.body.apiKey;
-        user.profileImagePath = req.body.imagePath || "";
-        user.authToken = "";
+        user.profileImagePath = req.body.imagePath;
         user.lastUpdatedDate = new Date().toISOString();
         await user.save(req.body);
 
@@ -166,10 +162,19 @@ async function login(req, res, next) {
             { expiresIn: "1h" }
         );
 
-        // Send success response
-        return res.status(200).json({
+        const loginResponse = {
+            userId: user._id,
+            businessName: user.businessName,
+            profileImagePath: user.profileImagePath,
+            ownerName: user.ownerName,
+            email: user.email,
+            apiKey: user.apiKey,
             token: token,
-        });
+            expiration: new Date().getTime() + 360000,
+        };
+
+        // Send success response
+        return res.status(200).json(loginResponse);
     } catch (error) {
         handleServerError(res, error);
     }

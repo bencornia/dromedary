@@ -17,7 +17,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul
                 class="navbar-nav me-auto mb-2 mb-lg-0"
-                *ngIf="!userIsAuthenticated"
+                *ngIf="!isAuthenticated"
             >
                 <li class="nav-item">
                     <a class="nav-link" href="#">Sign Up</a>
@@ -27,10 +27,7 @@
                 </li>
             </ul>
 
-            <ul
-                class="navbar-nav me-auto mb-2 mb-lg-0"
-                *ngIf="userIsAuthenticated"
-            >
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="isAuthenticated">
                 <li class="nav-item">
                     <a href="#" class="nav-link">Inventory</a>
                 </li>
@@ -38,7 +35,9 @@
                     <a href="#" class="nav-link">My Account</a>
                 </li>
                 <li class="nav-item">
-                    <button class="btn btn-outline-danger">Logout</button>
+                    <button class="btn btn-outline-danger" (click)="onLogout()">
+                        Logout
+                    </button>
                 </li>
             </ul>
         </div>

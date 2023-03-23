@@ -7,9 +7,13 @@ export interface IUser {
     apiKey?: string;
 }
 
-export interface AuthResponse {
+export interface AccountData {
+    userId: string;
+    businessName: string;
     profileImagePath: string;
     ownerName: string;
-    businessName: string;
     email: string;
+    apiKey: string;
+    token: string;
+    expiration: number;
 }

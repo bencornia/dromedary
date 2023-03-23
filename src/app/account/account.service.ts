@@ -1,19 +1,16 @@
 import { Injectable } from '@angular/core';
-import { IUser } from './user.model';
 import { HttpClient } from '@angular/common/http';
-import { AuthResponse } from './user.model';
-import { Subject } from 'rxjs';
+import { AccountData, IUser } from './user.model';
+import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
     private _token: string;
-    private authStatusListener = new Subject<boolean>();
+    private tokenTimer: NodeJS.Timeout;
+    accountData = new BehaviorSubject<AccountData>(null);
 
-    constructor(private http: HttpClient) {}
-
-    getAuthStatusListener() {
-        return this.authStatusListener.asObservable();
-    }
+    constructor(private http: HttpClient, private router: Router) {}
 
     get token() {
         return this._token;
@@ -23,17 +20,83 @@ export class AccountService {
         this._token = val;
     }
 
+    private handleAuthentication(accountData: AccountData) {
+        // Set token
+        this.token = accountData.token;
+
+        // Update authentication status
+        this.accountData.next(accountData);
+
+        // Set auto logout
+        this.autologout(accountData);
+
+        // Add account data to localstorage
+        localStorage.setItem(
+            'dromedary-account-data',
+            JSON.stringify(accountData)
+        );
+
+        // Redirect to inventory
+        this.router.navigate(['/inventory']);
+    }
+
+    autologout(accountData: AccountData) {
+        // Logout user in 1 hour
+        this.tokenTimer = setTimeout(() => {
+            this.logout();
+        }, accountData.expiration - Date.now());
+    }
+
+    autologin() {
+        // Get account data from local storage
+        const accountData: AccountData | null = JSON.parse(
+            localStorage.getItem('dromedary-account-data')
+        );
+
+        // Check for an existing user
+        if (!accountData) {
+            this.router.navigate(['/account/login']);
+            return;
+        }
+
+        // Logout if token has expired
+        if (accountData.expiration <= Date.now()) {
+            this.logout();
+
+            // redirect to login page
+            this.router.navigate(['/account/login']);
+            return;
+        }
+
+        // Handle authentication
+        this.handleAuthentication(accountData);
+    }
+
+    logout() {
+        // Unset token
+        this.token = '';
+
+        // Update authentication status
+        this.accountData.next(null);
+
+        // Clear timer
+        clearTimeout(this.tokenTimer);
+
+        // Redirect to login
+        this.router.navigate(['/account/login']);
+    }
+
     login(email: string, password: string) {
         this.http
-            .post<{ token: string }>('http://localhost:3000/api/users/login', {
+            .post<AccountData>('http://localhost:3000/api/users/login', {
                 email,
                 password,
             })
-            .subscribe((resData) => {
-                this.token = resData.token;
+            .subscribe((accountData) => {
+                this.handleAuthentication(accountData);
 
-                // Update login status
-                this.authStatusListener.next(true);
+                // Redirect to inventory
+                this.router.navigate(['/inventory']);
             });
     }
 
@@ -59,9 +122,9 @@ export class AccountService {
         formData.append('password', user.password);
 
         return this.http
-            .post<AuthResponse>('http://localhost:3000/api/users', formData)
-            .subscribe((authResponse: AuthResponse) => {
-                console.log(authResponse);
+            .post('http://localhost:3000/api/users', formData)
+            .subscribe(() => {
+                this.login(user.email, user.password);
             });
     }
 
