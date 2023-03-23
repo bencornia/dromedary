@@ -36,7 +36,6 @@ usersRouter.put(
     createUserValidator,
     validateResult,
     encrypt.encryptPassword,
-    encrypt.encryptApiKey,
     userController.putUser
 );
 

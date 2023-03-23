@@ -20,19 +20,43 @@
                 *ngIf="!isAuthenticated"
             >
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Sign Up</a>
+                    <a
+                        class="nav-link"
+                        routerLink="/account/edit"
+                        routerLinkActive="active"
+                        href="#"
+                        >Sign Up</a
+                    >
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Login</a>
+                    <a
+                        class="nav-link"
+                        routerLink="/account/login"
+                        routerLinkActive="active"
+                        href="#"
+                        >Login</a
+                    >
                 </li>
             </ul>
 
             <ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="isAuthenticated">
                 <li class="nav-item">
-                    <a href="#" class="nav-link">Inventory</a>
+                    <a
+                        href="#"
+                        class="nav-link"
+                        routerLink="/inventory"
+                        routerLinkActive="active"
+                        >Inventory</a
+                    >
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">My Account</a>
+                    <a
+                        href="#"
+                        class="nav-link"
+                        routerLink="/account"
+                        routerLinkActive="active"
+                        >My Account</a
+                    >
                 </li>
                 <li class="nav-item">
                     <button class="btn btn-outline-danger" (click)="onLogout()">

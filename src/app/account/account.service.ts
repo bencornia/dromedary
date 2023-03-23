@@ -55,7 +55,6 @@ export class AccountService {
 
         // Check for an existing user
         if (!accountData) {
-            this.router.navigate(['/account/login']);
             return;
         }
 
@@ -64,7 +63,7 @@ export class AccountService {
             this.logout();
 
             // redirect to login page
-            this.router.navigate(['/account/login']);
+
             return;
         }
 
@@ -84,6 +83,7 @@ export class AccountService {
 
         // Redirect to login
         this.router.navigate(['/account/login']);
+        localStorage.removeItem('dromedary-account-data');
     }
 
     login(email: string, password: string) {

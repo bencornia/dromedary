@@ -1,20 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AccountService } from '../account.service';
 import { requiredFileTypes } from '../../shared/mime-type.validator';
 import { fileSizeValidator } from '../../shared/fileSize.validator';
 import { IUser } from '../user.model';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-account-edit',
     templateUrl: './account-edit.component.html',
     styleUrls: ['./account-edit.component.css'],
 })
-export class AccountEditComponent implements OnInit {
+export class AccountEditComponent implements OnInit, OnDestroy {
     form: FormGroup;
     imagePreview: string;
-    mode: string = 'signup';
+    editMode: boolean = false;
+    private authListenerSubs: Subscription;
 
     constructor(
         private accountService: AccountService,
@@ -22,6 +24,13 @@ export class AccountEditComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        // Create subscription to authentication
+        this.authListenerSubs = this.accountService.accountData.subscribe(
+            (accountData) => {
+                this.editMode = !accountData ? false : true;
+            }
+        );
+
         // Create reactive form template
         this.form = new FormGroup({
             profileImage: new FormControl(null, {
@@ -51,6 +60,10 @@ export class AccountEditComponent implements OnInit {
         });
     }
 
+    ngOnDestroy(): void {
+        this.authListenerSubs.unsubscribe();
+    }
+
     onImagePicked(event: Event) {
         const file = (event.target as HTMLInputElement).files[0];
         this.form.patchValue({ profileImage: file });
@@ -76,9 +89,9 @@ export class AccountEditComponent implements OnInit {
         const userData: IUser = this.form.value;
 
         // We are either signing up or updating our account
-        if (this.mode === 'signup') {
+        if (!this.editMode) {
             this.accountService.createUser(userData);
-        } else if (this.mode === 'edit') {
+        } else if (this.editMode) {
             this.accountService.updateUser(userData);
         }
 

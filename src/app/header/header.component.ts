@@ -19,6 +19,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 this.isAuthenticated = !accountData ? false : true;
             }
         );
+
+        if (!this.isAuthenticated) {
+            this.accountService.autologin();
+        }
     }
 
     ngOnDestroy(): void {

@@ -6,10 +6,6 @@ import { AccountService } from './account/account.service';
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
     title = 'dromedary';
-
-    constructor(private accountService: AccountService) {}
-
-    ngOnInit(): void {}
 }

@@ -95,21 +95,19 @@
             formControlName="apiKey"
         />
     </div>
-    <div *ngIf="mode === 'signup'">
-        <button class="btn btn-primary mb-3" [disabled]="!form.valid">
+    <div class="mb-3" *ngIf="!editMode">
+        <button class="btn btn-primary" [disabled]="!form.valid">
             Sign Up
         </button>
 
         <div class="mb-3">
-            <a href="#">or login</a>
+            <a routerLink="/account/login">or login</a>
         </div>
     </div>
 
-    <button
-        *ngIf="mode === 'edit'"
-        class="btn btn-primary mb-3"
-        [disabled]="!form.valid"
-    >
-        Update Information
-    </button>
+    <div class="mb-3" *ngIf="editMode">
+        <button class="btn btn-primary" [disabled]="!form.valid">
+            Update Information
+        </button>
+    </div>
 </form>
