@@ -3,47 +3,50 @@
         <h3>Business Information</h3>
     </div>
 </div>
+
 <div class="row mt-5 flex-wrap">
     <div class="col d-flex align-items-end"><b>Photo</b></div>
     <div class="col d-flex justify-content-end align-items-end">
-        <img src="https://placekitten.com/50/50" alt="" />
+        <img
+            [src]="accountData.profileImage"
+            [alt]="accountData.businessName"
+            height="50px"
+        />
     </div>
 </div>
 <hr />
+
 <div class="row mt-5">
     <div class="col d-flex align-items-end"><b>Owner Name</b></div>
     <div class="col d-flex justify-content-end align-items-end">
-        <span>Peter Pettigrew</span>
+        <span>{{ accountData.ownerName }}</span>
     </div>
 </div>
 <hr />
+
 <div class="row mt-5">
     <div class="col d-flex align-items-end"><b>Business Name</b></div>
     <div class="col d-flex justify-content-end align-items-end">
-        <span>Dark Lord Consulting</span>
+        <span>{{ accountData.businessName }}</span>
     </div>
 </div>
 <hr />
+
 <div class="row mt-5">
     <div class="col d-flex align-items-end"><b>Email</b></div>
     <div class="col d-flex justify-content-end align-items-end">
-        <span>iamarat@deatheater.com</span>
+        <span>{{ accountData.email }}</span>
     </div>
 </div>
 <hr />
-<div class="row mt-5">
-    <div class="col d-flex align-items-end"><b>Password</b></div>
-    <div class="col d-flex justify-content-end align-items-end">
-        <span>*********</span>
-    </div>
-</div>
-<hr />
+
 <div class="row mt-5">
     <div class="col d-flex align-items-end"><b>API Key</b></div>
     <div class="col d-flex justify-content-end align-items-end">
-        <span>*********</span>
+        <span>{{ accountData.apiKey }}</span>
     </div>
 </div>
+
 <div class="row mt-5 mb-5">
     <button class="btn btn-primary" routerLink="/account/edit">
         Update My Information

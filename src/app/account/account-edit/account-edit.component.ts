@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AccountService } from '../account.service';
 import { requiredFileTypes } from '../../shared/mime-type.validator';
 import { fileSizeValidator } from '../../shared/fileSize.validator';
-import { IUser } from '../user.model';
+import { AccountData, IUser } from '../user.model';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -17,6 +17,7 @@ export class AccountEditComponent implements OnInit, OnDestroy {
     imagePreview: string;
     editMode: boolean = false;
     private authListenerSubs: Subscription;
+    accountData: AccountData;
 
     constructor(
         private accountService: AccountService,
@@ -28,6 +29,10 @@ export class AccountEditComponent implements OnInit, OnDestroy {
         this.authListenerSubs = this.accountService.accountData.subscribe(
             (accountData) => {
                 this.editMode = !accountData ? false : true;
+
+                if (accountData) {
+                    this.accountData = accountData;
+                }
             }
         );
 
@@ -58,6 +63,19 @@ export class AccountEditComponent implements OnInit, OnDestroy {
             }),
             apiKey: new FormControl(null),
         });
+
+        // Patch values if editing
+        if (this.editMode) {
+            this.imagePreview = this.accountData.profileImage;
+
+            this.form.patchValue({ ownerName: this.accountData.ownerName });
+            this.form.patchValue({
+                businessName: this.accountData.businessName,
+            });
+            this.form.patchValue({ email: this.accountData.email });
+            this.form.patchValue({ apiKey: this.accountData.apiKey });
+            this.form.removeControl('password');
+        }
     }
 
     ngOnDestroy(): void {
@@ -90,6 +108,8 @@ export class AccountEditComponent implements OnInit, OnDestroy {
 
         // We are either signing up or updating our account
         if (!this.editMode) {
+            console.log('create');
+
             this.accountService.createUser(userData);
         } else if (this.editMode) {
             this.accountService.updateUser(userData);

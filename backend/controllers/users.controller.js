@@ -45,14 +45,10 @@ async function getUser(req, res) {
 
 async function postUser(req, res) {
     try {
-        // Set default profile image
+        // Assign default image
         if (!req.body.imagePath) {
             req.body.imagePath = "default-profile.png";
         }
-
-        imagePath = `${req.protocol}://${req.get("host")}/images/${
-            req.body.imagePath
-        }`;
 
         const document = {
             businessName: req.body.businessName,
@@ -60,7 +56,7 @@ async function postUser(req, res) {
             email: req.body.email,
             password: req.body.password,
             apiKey: req.body.apiKey,
-            profileImagePath: imagePath,
+            profileImagePath: req.body.imagePath,
             createdDate: new Date().toISOString(),
             lastUpdatedDate: new Date().toISOString(),
         };
@@ -87,11 +83,12 @@ async function postUser(req, res) {
 }
 
 async function putUser(req, res) {
-    // Check for valid object id
-    let id = req.params.id;
-
     // Try making request
     try {
+        // Check for valid object id
+        let id = req.params.id;
+
+        // Find user
         const user = await User.findById(id);
 
         if (!user) {
@@ -102,12 +99,10 @@ async function putUser(req, res) {
         }
 
         // Make update
-        user.businessName = req.body.businessName;
-        user.ownerName = req.body.ownerName;
-        user.email = req.body.email;
-        user.password = req.body.password;
-        user.apiKey = req.body.apiKey;
-        user.profileImagePath = req.body.imagePath;
+        for (const prop in req.body) {
+            user[prop] = req.body[prop];
+        }
+
         user.lastUpdatedDate = new Date().toISOString();
         await user.save(req.body);
 
@@ -162,10 +157,14 @@ async function login(req, res, next) {
             { expiresIn: "1h" }
         );
 
+        const imagePath = `${req.protocol}://${req.get("host")}/images/${
+            user.profileImagePath
+        }`;
+
         const loginResponse = {
             userId: user._id,
             businessName: user.businessName,
-            profileImagePath: user.profileImagePath,
+            profileImagePath: imagePath,
             ownerName: user.ownerName,
             email: user.email,
             apiKey: user.apiKey,

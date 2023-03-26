@@ -67,7 +67,7 @@
         >
     </div>
 
-    <div class="mb-3">
+    <div class="mb-3" *ngIf="!editMode">
         <!-- password must be minimum eight characters, at least one letter and one number -->
         <label for="password" class="form-label">Password</label>
         <input
@@ -96,7 +96,11 @@
         />
     </div>
     <div class="mb-3" *ngIf="!editMode">
-        <button class="btn btn-primary" [disabled]="!form.valid">
+        <button
+            class="btn btn-primary"
+            [disabled]="!form.valid"
+            (click)="onSaveAccount()"
+        >
             Sign Up
         </button>
 
@@ -106,7 +110,11 @@
     </div>
 
     <div class="mb-3" *ngIf="editMode">
-        <button class="btn btn-primary" [disabled]="!form.valid">
+        <button
+            class="btn btn-primary"
+            [disabled]="!form.valid"
+            (click)="onSaveAccount()"
+        >
             Update Information
         </button>
     </div>

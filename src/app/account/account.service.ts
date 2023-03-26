@@ -37,7 +37,7 @@ export class AccountService {
         );
 
         // Redirect to inventory
-        this.router.navigate(['/inventory']);
+        this.router.navigate(['/account']);
     }
 
     autologout(accountData: AccountData) {
@@ -96,7 +96,7 @@ export class AccountService {
                 this.handleAuthentication(accountData);
 
                 // Redirect to inventory
-                this.router.navigate(['/inventory']);
+                this.router.navigate(['/account']);
             });
     }
 
@@ -121,22 +121,37 @@ export class AccountService {
         formData.append('email', user.email);
         formData.append('password', user.password);
 
-        return this.http
+        this.http
             .post('http://localhost:3000/api/users', formData)
             .subscribe(() => {
                 this.login(user.email, user.password);
             });
     }
 
-    updateUser(user: IUser) {
+    updateUser(user: any) {
         const formData = new FormData();
-        formData.append('profileImage', user.profileImage, 'userprofileimage');
+
+        // Append optional fields
+        if (user.profileImage) {
+            formData.append(
+                'profileImage',
+                user.profileImage,
+                user.profileImage.name
+            );
+        }
+
+        if (user.apiKey) {
+            formData.append('apiKey', user.apiKey);
+        }
+
         formData.append('ownerName', user.ownerName);
         formData.append('businessName', user.businessName);
         formData.append('email', user.email);
-        formData.append('password', user.password);
-        formData.append('apiKey', user.apiKey);
 
-        return this.http.put('http://localhost:3000/api/users', formData);
+        this.http
+            .put(`http://localhost:3000/api/users/${user.userId}`, formData)
+            .subscribe(() => {
+                this.router.navigate(['/account']);
+            });
     }
 }
