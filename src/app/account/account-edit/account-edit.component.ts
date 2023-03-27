@@ -66,7 +66,7 @@ export class AccountEditComponent implements OnInit, OnDestroy {
 
         // Patch values if editing
         if (this.editMode) {
-            this.imagePreview = this.accountData.profileImage;
+            this.imagePreview = this.accountData.profileImagePath;
 
             this.form.patchValue({ ownerName: this.accountData.ownerName });
             this.form.patchValue({
@@ -108,11 +108,9 @@ export class AccountEditComponent implements OnInit, OnDestroy {
 
         // We are either signing up or updating our account
         if (!this.editMode) {
-            console.log('create');
-
             this.accountService.createUser(userData);
         } else if (this.editMode) {
-            this.accountService.updateUser(userData);
+            this.accountService.updateUser(userData, this.accountData);
         }
 
         this.form.reset();

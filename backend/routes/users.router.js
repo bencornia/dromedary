@@ -33,9 +33,6 @@ usersRouter.put(
     "/:id",
     validateObjectId,
     upload.uploadWrapper(imageFieldName),
-    createUserValidator,
-    validateResult,
-    encrypt.encryptPassword,
     userController.putUser
 );
 

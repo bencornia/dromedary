@@ -128,7 +128,7 @@ export class AccountService {
             });
     }
 
-    updateUser(user: any) {
+    updateUser(user: any, accountData: AccountData) {
         const formData = new FormData();
 
         // Append optional fields
@@ -149,9 +149,45 @@ export class AccountService {
         formData.append('email', user.email);
 
         this.http
-            .put(`http://localhost:3000/api/users/${user.userId}`, formData)
+            .put(
+                `http://localhost:3000/api/users/${accountData.userId}`,
+                formData
+            )
             .subscribe(() => {
+                this.updateAccount(accountData);
+            });
+    }
+
+    updateAccount(accountData: AccountData) {
+        this.http
+            .get(`http://localhost:3000/api/users/${accountData.userId}`)
+            .subscribe((user: any) => {
+                accountData.apiKey = user.apiKey;
+                accountData.businessName = user.businessName;
+                accountData.ownerName = user.ownerName;
+                accountData.profileImagePath = user.profileImagePath;
+                accountData.email = user.email;
+
+                console.log(accountData);
+
+                this.accountData.next(accountData);
+                // Add account data to localstorage
+                localStorage.setItem(
+                    'dromedary-account-data',
+                    JSON.stringify(accountData)
+                );
+
                 this.router.navigate(['/account']);
+            });
+    }
+
+    delete(userId: string) {
+        this.http
+            .delete(`http://localhost:3000/api/users/${userId}`)
+            .subscribe(() => {
+                localStorage.removeItem('dromedary-account-data');
+                this.accountData.next(null);
+                this.router.navigate(['/account/login']);
             });
     }
 }

@@ -20,7 +20,7 @@ function fileName(req, file, cb) {
     const ext = path.extname(file.originalname);
 
     const imagePath = `${file.fieldname}-${uniqueSuffix}${ext}`;
-    req.body.imagePath = imagePath;
+    req.body.profileImagePath = imagePath;
     cb(null, imagePath);
 }
 

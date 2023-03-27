@@ -26,4 +26,8 @@ export class AccountDetailComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.authSub.unsubscribe();
     }
+
+    onDeleteAccount() {
+        this.accountService.delete(this.accountData.userId);
+    }
 }

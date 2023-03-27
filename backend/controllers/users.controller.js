@@ -46,8 +46,14 @@ async function getUser(req, res) {
 async function postUser(req, res) {
     try {
         // Assign default image
-        if (!req.body.imagePath) {
-            req.body.imagePath = "default-profile.png";
+        if (!req.body.profileImagePath) {
+            req.body.profileImagePath = `${req.protocol}://${req.get(
+                "host"
+            )}/images/default-profile.png`;
+        } else {
+            req.body.profileImagePath = `${req.protocol}://${req.get(
+                "host"
+            )}/images/${req.body.profileImagePath}`;
         }
 
         const document = {
@@ -56,7 +62,7 @@ async function postUser(req, res) {
             email: req.body.email,
             password: req.body.password,
             apiKey: req.body.apiKey,
-            profileImagePath: req.body.imagePath,
+            profileImagePath: req.body.profileImagePath,
             createdDate: new Date().toISOString(),
             lastUpdatedDate: new Date().toISOString(),
         };
@@ -65,7 +71,7 @@ async function postUser(req, res) {
         const existing = await User.exists({ email: req.body.email });
 
         if (existing) {
-            deleteImage(req.body.imagePath);
+            deleteImage(req.body.profileImagePath);
             return res.status(400).json({ error: "Email already exists!" });
         }
 
@@ -75,7 +81,7 @@ async function postUser(req, res) {
         return res.status(201).json({ id: user._id });
     } catch (error) {
         // Delete image
-        deleteImage(req.body.imagePath);
+        deleteImage(req.body.profileImagePath);
 
         // Document Creation failed
         return handleServerError(res, error);
@@ -98,13 +104,29 @@ async function putUser(req, res) {
                 .json({ message: `Resource with ID: [ ${id} ] not found.` });
         }
 
+        // Delete image
+        if (req.body.profileImagePath) {
+            deleteImage(user.profileImagePath);
+        }
+
+        // Assign default image
+        if (!req.body.profileImagePath) {
+            req.body.profileImagePath = `${req.protocol}://${req.get(
+                "host"
+            )}/images/default-profile.png`;
+        } else {
+            req.body.profileImagePath = `${req.protocol}://${req.get(
+                "host"
+            )}/images/${req.body.profileImagePath}`;
+        }
+
         // Make update
         for (const prop in req.body) {
             user[prop] = req.body[prop];
         }
 
         user.lastUpdatedDate = new Date().toISOString();
-        await user.save(req.body);
+        await user.save();
 
         // User found
         return res.sendStatus(204);
@@ -117,14 +139,24 @@ async function putUser(req, res) {
 async function deleteUser(req, res) {
     let id = req.params.id;
     try {
-        const result = await User.deleteOne({ _id: id });
+        // Find user
+        const user = await User.findById(id);
 
-        if (result.deletedCount === 0) {
+        if (!user) {
             // User not found
             return res
                 .status(404)
                 .json({ message: `Resource with ID: [ ${id} ] not found.` });
         }
+
+        const result = await User.deleteOne({ _id: id });
+
+        if (result.deletedCount === 0) {
+            throw new Error("Deletion Failed!");
+        }
+        // delete profile image
+        deleteImage(user.profileImagePath);
+
         // Successful deletion
         return res.sendStatus(204);
     } catch (error) {
@@ -157,19 +189,15 @@ async function login(req, res, next) {
             { expiresIn: "1h" }
         );
 
-        const imagePath = `${req.protocol}://${req.get("host")}/images/${
-            user.profileImagePath
-        }`;
-
         const loginResponse = {
             userId: user._id,
             businessName: user.businessName,
-            profileImagePath: imagePath,
+            profileImagePath: user.profileImagePath,
             ownerName: user.ownerName,
             email: user.email,
             apiKey: user.apiKey,
             token: token,
-            expiration: Date.now() + 360000,
+            expiration: Date.now() + 3600000,
         };
 
         // Send success response
