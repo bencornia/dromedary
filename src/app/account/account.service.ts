@@ -37,7 +37,7 @@ export class AccountService {
         );
 
         // Redirect to inventory
-        this.router.navigate(['/account']);
+        this.router.navigate(['/inventory']);
     }
 
     autologout(accountData: AccountData) {
@@ -61,8 +61,6 @@ export class AccountService {
         // Logout if token has expired
         if (accountData.expiration <= Date.now()) {
             this.logout();
-
-            // redirect to login page
 
             return;
         }

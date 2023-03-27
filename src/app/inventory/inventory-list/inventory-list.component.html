@@ -1,4 +1,42 @@
-<button class="btn btn-success mt-5">Add Item</button>
+<form class="mt-5" [formGroup]="inventoryForm" (submit)="onAddItem()">
+    <button class="btn btn-success mb-3">Add Item</button>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <input
+                type="text"
+                name="itemName"
+                id="itemName"
+                class="form-control"
+                placeholder="Item Name"
+                aria-label="Item Name"
+                formControlName="itemName"
+            />
+        </div>
+        <div class="col-md-4 mb-3">
+            <input
+                type="text"
+                name="qty"
+                id="qty"
+                class="form-control"
+                placeholder="Quantity"
+                aria-label="Quantity"
+                formControlName="quantity"
+            />
+        </div>
+        <div class="col-md-4 mb-3">
+            <input
+                type="text"
+                name="price"
+                id="price"
+                class="form-control"
+                placeholder="Price"
+                aria-label="Price"
+                formControlName="price"
+            />
+        </div>
+    </div>
+</form>
 
 <div class="row mt-5">
     <div class="mb-3">
@@ -11,8 +49,7 @@
     </div>
 </div>
 <div class="row mt-5">
-    <div class="col-2"><b>Image</b></div>
-    <div class="col-4"><b>Name</b></div>
+    <div class="col-6"><b>Name</b></div>
     <div class="col-2"><b>Quantity</b></div>
     <div class="col-3"><b>Price</b></div>
 </div>
