@@ -41,9 +41,10 @@
         >
             Update Item
         </button>
-        <a [routerLink]="['/inventory']">Go Back</a>
+        <a routerLink="/inventory">Go Back</a>
     </div>
 </form>
 <button class="btn btn-danger mt-5" (click)="onDeleteItem()">
     Delete Item
 </button>
+<div class="alert alert-danger" *ngIf="errMsg">{{ errMsg }}</div>

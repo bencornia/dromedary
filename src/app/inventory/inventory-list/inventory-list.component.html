@@ -1,5 +1,7 @@
 <form class="mt-5" [formGroup]="inventoryForm" (submit)="onAddItem()">
-    <button class="btn btn-success mb-3">Add Item</button>
+    <button class="btn btn-success mb-3" [disabled]="inventoryForm.invalid">
+        Add Item
+    </button>
 
     <div class="row">
         <div class="col-md-4 mb-3">
@@ -38,17 +40,8 @@
         </div>
     </div>
 </form>
+<div class="alert alert-danger" *ngIf="errMsg">{{ errMsg }}</div>
 
-<div class="row mt-5">
-    <div class="mb-3">
-        <label for="sort-item" class="form-label">Sort By</label>
-        <select name="sort-item" id="sort-item" class="form-select">
-            <option value="name" selected>Name</option>
-            <option value="quantity">Quantity</option>
-            <option value="price">Price</option>
-        </select>
-    </div>
-</div>
 <div class="row mt-5">
     <div class="col-5"><b>Name</b></div>
     <div class="col-3"><b>Qty</b></div>

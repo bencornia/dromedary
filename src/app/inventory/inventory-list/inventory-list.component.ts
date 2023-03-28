@@ -9,10 +9,10 @@ import { Item } from '../item.model';
     templateUrl: './inventory-list.component.html',
     styleUrls: ['./inventory-list.component.css'],
 })
-export class InventoryListComponent implements OnInit, OnDestroy {
+export class InventoryListComponent implements OnInit {
     inventoryForm: FormGroup;
-    itemsSubscription: Subscription;
     items: Item[];
+    errMsg: string;
 
     constructor(private inventoryService: InventoryService) {}
 
@@ -30,25 +30,26 @@ export class InventoryListComponent implements OnInit, OnDestroy {
         });
 
         // Get all items
-        this.inventoryService.getAllItems();
-
-        // Set up subscription to items
-        this.itemsSubscription = this.inventoryService.itemsSubject.subscribe(
-            (items: Item[]) => {
+        this.inventoryService.getAllItems().subscribe({
+            next: (items: Item[]) => {
                 this.items = items;
-            }
-        );
-    }
-
-    ngOnDestroy(): void {
-        this.itemsSubscription.unsubscribe();
+            },
+            error: (err: Error) => {
+                this.errMsg = err.message;
+            },
+        });
     }
 
     onAddItem() {
         const newItem: Item = this.inventoryForm.value;
         newItem.productPrice = Math.floor(newItem.productPrice * 100);
 
-        this.inventoryService.addItem(newItem);
+        this.inventoryService.addItem(newItem).subscribe({
+            next: () => {},
+            error: (err: Error) => {
+                this.errMsg = err.message;
+            },
+        });
 
         this.inventoryForm.reset();
     }

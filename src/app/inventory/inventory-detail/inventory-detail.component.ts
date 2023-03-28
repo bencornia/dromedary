@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { InventoryService } from '../inventory.service';
 import { Item } from '../item.model';
 
@@ -12,7 +13,9 @@ import { Item } from '../item.model';
 export class InventoryDetailComponent implements OnInit {
     inventoryForm: FormGroup;
     itemIndex: number;
+    inventoryListener: Subscription;
     item: Item;
+    errMsg: string;
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -23,6 +26,7 @@ export class InventoryDetailComponent implements OnInit {
     ngOnInit() {
         // Get inventory id
         this.itemIndex = +this.activatedRoute.snapshot.paramMap.get('index');
+
         this.item = this.inventoryService.getItem(this.itemIndex);
 
         // Initialize form
@@ -43,13 +47,27 @@ export class InventoryDetailComponent implements OnInit {
     }
 
     onDeleteItem() {
-        this.inventoryService.deleteItem(this.itemIndex);
+        this.inventoryService.deleteItem(this.itemIndex).subscribe({
+            next: () => {
+                this.router.navigate(['/inventory']);
+            },
+            error: (err: Error) => {
+                this.errMsg = err.message;
+            },
+        });
     }
 
     onUpdateItem() {
         const newItem: Item = this.inventoryForm.value;
         newItem.productPrice = Math.floor(newItem.productPrice * 100);
 
-        this.inventoryService.updateItem(this.itemIndex, newItem);
+        this.inventoryService.updateItem(this.itemIndex, newItem).subscribe({
+            next: () => {
+                this.router.navigate(['/inventory']);
+            },
+            error: (err: Error) => {
+                this.errMsg = err.message;
+            },
+        });
     }
 }

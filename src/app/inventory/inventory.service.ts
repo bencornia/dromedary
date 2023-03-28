@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { catchError, Subject, tap, throwError } from 'rxjs';
 import { Item } from './item.model';
 
 import { environment } from 'src/environments/environment';
@@ -22,14 +22,17 @@ export class InventoryService {
         // Add userid
         item.businessId = this.accountService.accountData.userId;
 
-        this.http
-            .post(`${environment.apiURL}/products`, item)
-            .subscribe((item: Item) => {
+        return this.http.post(`${environment.apiURL}/products`, item).pipe(
+            catchError(this.handleError),
+            tap((item: Item) => {
                 this.items.push(item);
-            });
+            })
+        );
     }
 
     getItem(index: number) {
+        console.log(index);
+
         return this.items[index];
     }
 
@@ -37,33 +40,50 @@ export class InventoryService {
         const item = this.items.splice(index, 1)[0];
 
         // Update MongoDB
-        this.http
+        return this.http
             .delete(`${environment.apiURL}/products/${item._id}`)
-            .subscribe(() => {
-                this.router.navigate(['/inventory']);
-            });
+            .pipe(catchError(this.handleError));
     }
 
     updateItem(index: number, updateItem: Item) {
         const item = this.items[index];
 
         // Update db
-        this.http
+        return this.http
             .put(`${environment.apiURL}/products/${item._id}`, updateItem)
-            .subscribe((item: Item) => {
-                this.items[index] = item;
-                this.router.navigate(['/inventory']);
-            });
+            .pipe(catchError(this.handleError));
     }
 
     getAllItems() {
-        this.http
-            .get(
+        return this.http
+            .get<Item[]>(
                 `${environment.apiURL}/products/business/${this.accountService.accountData.userId}`
             )
-            .subscribe((items: Item[]) => {
-                this.itemsSubject.next(items);
-                this.items = items;
-            });
+            .pipe(
+                catchError(this.handleError),
+                tap((items: Item[]) => {
+                    this.items = items;
+                    this.itemsSubject.next(this.items);
+                })
+            );
+    }
+
+    handleError(error: HttpErrorResponse) {
+        let msg: string;
+
+        switch (error.status) {
+            case 401:
+                msg = 'You are not authorized! Incorrect credentials!';
+                break;
+            case 500:
+                msg = 'An internal server error occurred. Please try again!';
+                break;
+
+            default:
+                msg = 'An unknown error occurred. Please try again.';
+                break;
+        }
+
+        return throwError(() => new Error(msg));
     }
 }
