@@ -18,13 +18,15 @@ export class InventoryListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.inventoryForm = new FormGroup({
-            itemName: new FormControl(null, {
+            productName: new FormControl(null, {
                 validators: Validators.required,
             }),
-            quantity: new FormControl(null, {
+            productQuantity: new FormControl(null, {
                 validators: Validators.required,
             }),
-            price: new FormControl(null, { validators: Validators.required }),
+            productPrice: new FormControl(null, {
+                validators: Validators.required,
+            }),
         });
 
         // Get all items
@@ -43,6 +45,11 @@ export class InventoryListComponent implements OnInit, OnDestroy {
     }
 
     onAddItem() {
-        this.inventoryService.addItem();
+        const newItem: Item = this.inventoryForm.value;
+        newItem.productPrice = Math.floor(newItem.productPrice * 100);
+
+        this.inventoryService.addItem(newItem);
+
+        this.inventoryForm.reset();
     }
 }

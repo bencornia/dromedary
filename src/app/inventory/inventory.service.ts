@@ -18,7 +18,16 @@ export class InventoryService {
         private router: Router
     ) {}
 
-    addItem() {}
+    addItem(item: Item) {
+        // Add userid
+        item.businessId = this.accountService.accountData.userId;
+
+        this.http
+            .post(`${environment.apiURL}/products`, item)
+            .subscribe((item: Item) => {
+                this.items.push(item);
+            });
+    }
 
     getItem(index: number) {
         return this.items[index];
@@ -41,8 +50,8 @@ export class InventoryService {
         // Update db
         this.http
             .put(`${environment.apiURL}/products/${item._id}`, updateItem)
-            .subscribe(() => {
-                this.items[index] = updateItem;
+            .subscribe((item: Item) => {
+                this.items[index] = item;
                 this.router.navigate(['/inventory']);
             });
     }
