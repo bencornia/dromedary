@@ -25,6 +25,7 @@ export class InventoryService {
             )
             .subscribe((items: Item[]) => {
                 this.itemsSubject.next(items);
+                this.items = items;
             });
     }
 }
