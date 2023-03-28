@@ -42,6 +42,8 @@ export class AccountService {
             'dromedary-account-data',
             JSON.stringify(accountData)
         );
+
+        this.router.navigate(['/account']);
     }
 
     autologout(accountData: AccountData) {
@@ -121,13 +123,13 @@ export class AccountService {
         return throwError(() => new Error(msg));
     }
 
-    createUser(formData: FormData) {
+    createUser(formData: FormData, email, password) {
         return this.http
-            .post<IUser>('http://localhost:3000/api/users', formData)
+            .post<IUser>(`${environment.apiURL}/users`, formData)
             .pipe(
                 catchError(this.handleError),
-                tap(({ email, password }) => {
-                    this.login(email, password);
+                tap(() => {
+                    this.login(email, password).subscribe();
                 })
             );
     }

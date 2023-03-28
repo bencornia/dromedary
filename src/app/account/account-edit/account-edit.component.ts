@@ -117,17 +117,18 @@ export class AccountEditComponent implements OnInit, OnDestroy {
         formData.append('ownerName', user.ownerName);
         formData.append('businessName', user.businessName);
         formData.append('email', user.email);
+        formData.append('password', user.password);
 
         // We are either signing up or updating our account
         if (!this.editMode) {
-            this.accountService.createUser(formData).subscribe({
-                next: () => {
-                    this.router.navigate(['/account']);
-                },
-                error: (err: Error) => {
-                    this.errMsg = err.message;
-                },
-            });
+            this.accountService
+                .createUser(formData, user.email, user.password)
+                .subscribe({
+                    next: () => {},
+                    error: (err: Error) => {
+                        this.errMsg = err.message;
+                    },
+                });
         } else if (this.editMode) {
             this.accountService
                 .updateUser(formData, this.accountData.userId)
