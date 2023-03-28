@@ -1,19 +1,19 @@
 export interface IUser {
-    ownerName: string;
     businessName: string;
+    ownerName: string;
     email: string;
     password: string;
-    apiKey?: string;
-    profileImage?: File;
+    profileImagePath: string;
+    createdDate: string;
+    lastUpdatedDate: string;
 }
 
 export interface AccountData {
     userId: string;
     businessName: string;
-    profileImagePath?: string;
+    profileImagePath: string;
     ownerName: string;
     email: string;
-    apiKey: string;
     token: string;
     expiration: number;
 }

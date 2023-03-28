@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AccountData, IUser } from './user.model';
-import { BehaviorSubject } from 'rxjs';
+import { catchError, tap, throwError, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
     private _token: string;
     private tokenTimer: NodeJS.Timeout;
-    accountSubject = new BehaviorSubject<AccountData>(null);
     accountData: AccountData;
+    authStatus = new BehaviorSubject<boolean>(false);
 
     constructor(private http: HttpClient, private router: Router) {}
 
@@ -21,12 +22,16 @@ export class AccountService {
         this._token = val;
     }
 
+    getAccountData() {
+        return this.accountData;
+    }
+
     private handleAuthentication(accountData: AccountData) {
         // Set token
         this.token = accountData.token;
 
         // Update authentication status
-        this.accountSubject.next(accountData);
+        this.authStatus.next(true);
         this.accountData = accountData;
 
         // Set auto logout
@@ -37,9 +42,6 @@ export class AccountService {
             'dromedary-account-data',
             JSON.stringify(accountData)
         );
-
-        // Redirect to inventory
-        this.router.navigate(['/inventory']);
     }
 
     autologout(accountData: AccountData) {
@@ -76,7 +78,7 @@ export class AccountService {
         this.token = '';
 
         // Update authentication status
-        this.accountSubject.next(null);
+        this.authStatus.next(false);
 
         // Clear timer
         clearTimeout(this.tokenTimer);
@@ -87,106 +89,82 @@ export class AccountService {
     }
 
     login(email: string, password: string) {
-        this.http
-            .post<AccountData>('http://localhost:3000/api/users/login', {
+        return this.http
+            .post<AccountData>(`${environment.apiURL}/users/login`, {
                 email,
                 password,
             })
-            .subscribe((accountData) => {
-                this.handleAuthentication(accountData);
-
-                // Redirect to inventory
-                this.router.navigate(['/account']);
-            });
-    }
-
-    createUser(user: IUser) {
-        const formData = new FormData();
-
-        // Append optional fields
-        if (user.profileImage) {
-            formData.append(
-                'profileImage',
-                user.profileImage,
-                user.profileImage.name
+            .pipe(
+                catchError(this.handleError),
+                tap((accountData: AccountData) => {
+                    this.handleAuthentication(accountData);
+                })
             );
-        }
-
-        if (user.apiKey) {
-            formData.append('apiKey', user.apiKey);
-        }
-
-        formData.append('ownerName', user.ownerName);
-        formData.append('businessName', user.businessName);
-        formData.append('email', user.email);
-        formData.append('password', user.password);
-
-        this.http
-            .post('http://localhost:3000/api/users', formData)
-            .subscribe(() => {
-                this.login(user.email, user.password);
-            });
     }
 
-    updateUser(user: any, accountData: AccountData) {
-        const formData = new FormData();
+    handleError(error: HttpErrorResponse) {
+        let msg: string;
 
-        // Append optional fields
-        if (user.profileImage) {
-            formData.append(
-                'profileImage',
-                user.profileImage,
-                user.profileImage.name
+        switch (error.status) {
+            case 401:
+                msg = 'You are not authorized! Incorrect credentials!';
+                break;
+            case 500:
+                msg = 'An internal server error occurred. Please try again!';
+                break;
+
+            default:
+                msg = 'An unknown error occurred. Please try again.';
+                break;
+        }
+
+        return throwError(() => new Error(msg));
+    }
+
+    createUser(formData: FormData) {
+        return this.http
+            .post<IUser>('http://localhost:3000/api/users', formData)
+            .pipe(
+                catchError(this.handleError),
+                tap(({ email, password }) => {
+                    this.login(email, password);
+                })
             );
-        }
-
-        if (user.apiKey) {
-            formData.append('apiKey', user.apiKey);
-        }
-
-        formData.append('ownerName', user.ownerName);
-        formData.append('businessName', user.businessName);
-        formData.append('email', user.email);
-
-        this.http
-            .put(
-                `http://localhost:3000/api/users/${accountData.userId}`,
-                formData
-            )
-            .subscribe(() => {
-                this.updateAccount(accountData);
-            });
     }
 
-    updateAccount(accountData: AccountData) {
+    updateUser(formData: FormData, userId: string) {
+        return this.http
+            .put(`${environment.apiURL}/users/${userId}`, formData)
+            .pipe(
+                catchError(this.handleError),
+                tap(() => {
+                    this.updateAccount(userId);
+                })
+            );
+    }
+
+    updateAccount(userId: string) {
         this.http
-            .get(`http://localhost:3000/api/users/${accountData.userId}`)
-            .subscribe((user: any) => {
-                accountData.apiKey = user.apiKey;
-                accountData.businessName = user.businessName;
-                accountData.ownerName = user.ownerName;
-                accountData.profileImagePath = user.profileImagePath;
-                accountData.email = user.email;
+            .get<IUser>(`${environment.apiURL}/users/${userId}`)
+            .subscribe(
+                ({ businessName, email, ownerName, profileImagePath }) => {
+                    // Update current user
+                    this.accountData.businessName = businessName;
+                    this.accountData.email = email;
+                    this.accountData.ownerName = ownerName;
+                    this.accountData.profileImagePath = profileImagePath;
 
-                console.log(accountData);
-
-                this.accountSubject.next(accountData);
-                // Add account data to localstorage
-                localStorage.setItem(
-                    'dromedary-account-data',
-                    JSON.stringify(accountData)
-                );
-
-                this.router.navigate(['/account']);
-            });
+                    this.handleAuthentication(this.accountData);
+                }
+            );
     }
 
     delete(userId: string) {
         this.http
-            .delete(`http://localhost:3000/api/users/${userId}`)
+            .delete(`${environment.apiURL}/users/${userId}`)
             .subscribe(() => {
                 localStorage.removeItem('dromedary-account-data');
-                this.accountSubject.next(null);
+                this.authStatus.next(false);
                 this.router.navigate(['/account/login']);
             });
     }

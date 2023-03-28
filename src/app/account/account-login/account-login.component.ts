@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { of } from 'rxjs';
 import { AccountService } from '../account.service';
+import { AccountData } from '../user.model';
 
 @Component({
     selector: 'app-account-login',
@@ -9,8 +12,12 @@ import { AccountService } from '../account.service';
 })
 export class AccountLoginComponent implements OnInit {
     form: FormGroup;
+    errorMsg: string | null;
 
-    constructor(private accountService: AccountService) {}
+    constructor(
+        private accountService: AccountService,
+        private router: Router
+    ) {}
 
     ngOnInit(): void {
         this.form = new FormGroup({
@@ -33,10 +40,16 @@ export class AccountLoginComponent implements OnInit {
             return;
         }
 
-        this.accountService.login(
-            this.form.value.email,
-            this.form.value.password
-        );
+        this.accountService
+            .login(this.form.value.email, this.form.value.password)
+            .subscribe({
+                next: () => {
+                    this.router.navigate(['/account']);
+                },
+                error: (err: Error) => {
+                    this.errorMsg = err.message;
+                },
+            });
 
         this.form.reset();
     }

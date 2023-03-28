@@ -8,15 +8,15 @@ import { AccountService } from '../account/account.service';
     styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-    private authListenerSubs: Subscription;
-    isAuthenticated = false;
+    private authListener: Subscription;
+    isAuthenticated: boolean;
 
     constructor(private accountService: AccountService) {}
 
     ngOnInit(): void {
-        this.authListenerSubs = this.accountService.accountSubject.subscribe(
-            (accountData) => {
-                this.isAuthenticated = !accountData ? false : true;
+        this.authListener = this.accountService.authStatus.subscribe(
+            (state: boolean) => {
+                this.isAuthenticated = state;
             }
         );
 
@@ -26,7 +26,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.authListenerSubs.unsubscribe();
+        this.authListener.unsubscribe();
     }
 
     onLogout() {

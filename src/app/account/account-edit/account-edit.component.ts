@@ -16,8 +16,9 @@ export class AccountEditComponent implements OnInit, OnDestroy {
     form: FormGroup;
     imagePreview: string;
     editMode: boolean = false;
-    private authListenerSubs: Subscription;
+    private authListener: Subscription;
     accountData: AccountData;
+    errMsg: string | null;
 
     constructor(
         private accountService: AccountService,
@@ -26,13 +27,10 @@ export class AccountEditComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         // Create subscription to authentication
-        this.authListenerSubs = this.accountService.accountSubject.subscribe(
-            (accountData) => {
-                this.editMode = !accountData ? false : true;
-
-                if (accountData) {
-                    this.accountData = accountData;
-                }
+        this.authListener = this.accountService.authStatus.subscribe(
+            (state: boolean) => {
+                this.editMode = state;
+                this.accountData = this.accountService.getAccountData();
             }
         );
 
@@ -61,7 +59,6 @@ export class AccountEditComponent implements OnInit, OnDestroy {
                     ),
                 ],
             }),
-            apiKey: new FormControl(null),
         });
 
         // Patch values if editing
@@ -73,13 +70,12 @@ export class AccountEditComponent implements OnInit, OnDestroy {
                 businessName: this.accountData.businessName,
             });
             this.form.patchValue({ email: this.accountData.email });
-            this.form.patchValue({ apiKey: this.accountData.apiKey });
             this.form.removeControl('password');
         }
     }
 
     ngOnDestroy(): void {
-        this.authListenerSubs.unsubscribe();
+        this.authListener.unsubscribe();
     }
 
     onImagePicked(event: Event) {
@@ -104,13 +100,45 @@ export class AccountEditComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const userData: IUser = this.form.value;
+        // Create form data
+        const user = this.form.value;
+        const formData = new FormData();
+
+        // Add optional image upload
+        if (user.profileImage) {
+            formData.append(
+                'profileImage',
+                user.profileImage,
+                user.profileImage.name
+            );
+        }
+
+        // Add business info
+        formData.append('ownerName', user.ownerName);
+        formData.append('businessName', user.businessName);
+        formData.append('email', user.email);
 
         // We are either signing up or updating our account
         if (!this.editMode) {
-            this.accountService.createUser(userData);
+            this.accountService.createUser(formData).subscribe({
+                next: () => {
+                    this.router.navigate(['/account']);
+                },
+                error: (err: Error) => {
+                    this.errMsg = err.message;
+                },
+            });
         } else if (this.editMode) {
-            this.accountService.updateUser(userData, this.accountData);
+            this.accountService
+                .updateUser(formData, this.accountData.userId)
+                .subscribe({
+                    next: () => {
+                        this.router.navigate(['/account']);
+                    },
+                    error: (err: Error) => {
+                        this.errMsg = err.message;
+                    },
+                });
         }
 
         this.form.reset();
@@ -146,8 +174,5 @@ export class AccountEditComponent implements OnInit, OnDestroy {
     }
     get password() {
         return this.form.get('password');
-    }
-    get apiKey() {
-        return this.form.get('apiKey');
     }
 }

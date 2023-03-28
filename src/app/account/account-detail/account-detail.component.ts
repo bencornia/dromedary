@@ -9,22 +9,24 @@ import { AccountData } from '../user.model';
     styleUrls: ['./account-detail.component.css'],
 })
 export class AccountDetailComponent implements OnInit, OnDestroy {
-    private authSub: Subscription;
-    accountData: AccountData | null;
+    private authListener: Subscription;
+    accountData: AccountData;
+    isAuthenticated: boolean;
 
     constructor(private accountService: AccountService) {}
 
     ngOnInit(): void {
         // Create subscription to authentication
-        this.authSub = this.accountService.accountSubject.subscribe(
-            (accountData) => {
-                this.accountData = accountData;
+        this.authListener = this.accountService.authStatus.subscribe(
+            (state: boolean) => {
+                this.isAuthenticated = state;
+                this.accountData = this.accountService.getAccountData();
             }
         );
     }
 
     ngOnDestroy(): void {
-        this.authSub.unsubscribe();
+        this.authListener.unsubscribe();
     }
 
     onDeleteAccount() {

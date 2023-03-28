@@ -1,4 +1,4 @@
-<form [formGroup]="form" (submit)="onLogin()">
+<form [formGroup]="form" (submit)="onLogin()" class="mt-5">
     <div class="mb-3">
         <label for="email" class="form-label">Email</label>
         <input
@@ -39,3 +39,4 @@
         <a routerLink="/account/edit">or signup</a>
     </div>
 </form>
+<div class="alert alert-danger" *ngIf="errorMsg">{{ errorMsg }}</div>

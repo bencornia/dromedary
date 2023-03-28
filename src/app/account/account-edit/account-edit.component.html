@@ -85,16 +85,6 @@
         >
     </div>
 
-    <div class="mb-3">
-        <label for="apiKey" class="form-label">Square API Key</label>
-        <input
-            type="password"
-            name="apiKey"
-            id="apiKey"
-            class="form-control"
-            formControlName="apiKey"
-        />
-    </div>
     <div class="mb-3" *ngIf="!editMode">
         <button
             class="btn btn-primary"
@@ -122,3 +112,4 @@
         </div>
     </div>
 </form>
+<div class="alert alert-danger" *ngIf="errMsg">{{ errMsg }}</div>
