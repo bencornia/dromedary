@@ -168,4 +168,10 @@ export class AccountService {
                 this.router.navigate(['/account/login']);
             });
     }
+
+    updatePassword(userId: string, passwords: {}) {
+        return this.http
+            .put(`${environment.apiURL}/users/password/${userId}`, passwords)
+            .pipe(catchError(this.handleError));
+    }
 }
