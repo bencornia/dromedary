@@ -8,7 +8,8 @@ import { Router } from '@angular/router';
 export class AccountService {
     private _token: string;
     private tokenTimer: NodeJS.Timeout;
-    accountData = new BehaviorSubject<AccountData>(null);
+    accountSubject = new BehaviorSubject<AccountData>(null);
+    accountData: AccountData;
 
     constructor(private http: HttpClient, private router: Router) {}
 
@@ -25,7 +26,8 @@ export class AccountService {
         this.token = accountData.token;
 
         // Update authentication status
-        this.accountData.next(accountData);
+        this.accountSubject.next(accountData);
+        this.accountData = accountData;
 
         // Set auto logout
         this.autologout(accountData);
@@ -74,7 +76,7 @@ export class AccountService {
         this.token = '';
 
         // Update authentication status
-        this.accountData.next(null);
+        this.accountSubject.next(null);
 
         // Clear timer
         clearTimeout(this.tokenTimer);
@@ -168,7 +170,7 @@ export class AccountService {
 
                 console.log(accountData);
 
-                this.accountData.next(accountData);
+                this.accountSubject.next(accountData);
                 // Add account data to localstorage
                 localStorage.setItem(
                     'dromedary-account-data',
@@ -184,7 +186,7 @@ export class AccountService {
             .delete(`http://localhost:3000/api/users/${userId}`)
             .subscribe(() => {
                 localStorage.removeItem('dromedary-account-data');
-                this.accountData.next(null);
+                this.accountSubject.next(null);
                 this.router.navigate(['/account/login']);
             });
     }

@@ -16,7 +16,7 @@ export class AccountDetailComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         // Create subscription to authentication
-        this.authSub = this.accountService.accountData.subscribe(
+        this.authSub = this.accountService.accountSubject.subscribe(
             (accountData) => {
                 this.accountData = accountData;
             }

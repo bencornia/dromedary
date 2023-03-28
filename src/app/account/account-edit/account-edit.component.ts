@@ -26,7 +26,7 @@ export class AccountEditComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         // Create subscription to authentication
-        this.authListenerSubs = this.accountService.accountData.subscribe(
+        this.authListenerSubs = this.accountService.accountSubject.subscribe(
             (accountData) => {
                 this.editMode = !accountData ? false : true;
 

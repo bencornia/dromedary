@@ -49,10 +49,14 @@
     </div>
 </div>
 <div class="row mt-5">
-    <div class="col-6"><b>Name</b></div>
-    <div class="col-2"><b>Quantity</b></div>
-    <div class="col-3"><b>Price</b></div>
+    <div class="col-5"><b>Name</b></div>
+    <div class="col-3"><b>Qty</b></div>
+    <div class="col-4"><b>Price</b></div>
 </div>
 <div class="row">
-    <app-inventory-item></app-inventory-item>
+    <app-inventory-item
+        *ngFor="let item of items; let i = index"
+        [item]="item"
+        [index]="i"
+    ></app-inventory-item>
 </div>
