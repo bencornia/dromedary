@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { InventoryService } from '../inventory.service';
 import { Item } from '../item.model';
 
@@ -11,18 +11,19 @@ import { Item } from '../item.model';
 })
 export class InventoryDetailComponent implements OnInit {
     inventoryForm: FormGroup;
-    itemId: number;
+    itemIndex: number;
     item: Item;
 
     constructor(
         private activatedRoute: ActivatedRoute,
-        private inventoryService: InventoryService
+        private inventoryService: InventoryService,
+        private router: Router
     ) {}
 
     ngOnInit() {
         // Get inventory id
-        this.itemId = +this.activatedRoute.snapshot.paramMap.get('id');
-        this.item = this.inventoryService.items[this.itemId];
+        this.itemIndex = +this.activatedRoute.snapshot.paramMap.get('index');
+        this.item = this.inventoryService.getItem(this.itemIndex);
 
         // Initialize form
         this.inventoryForm = new FormGroup({
@@ -39,5 +40,16 @@ export class InventoryDetailComponent implements OnInit {
                 }
             ),
         });
+    }
+
+    onDeleteItem() {
+        this.inventoryService.deleteItem(this.itemIndex);
+    }
+
+    onUpdateItem() {
+        const newItem: Item = this.inventoryForm.value;
+        newItem.productPrice = Math.floor(newItem.productPrice * 100);
+
+        this.inventoryService.updateItem(this.itemIndex, newItem);
     }
 }

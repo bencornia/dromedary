@@ -5,6 +5,7 @@ import { Item } from './item.model';
 
 import { environment } from 'src/environments/environment';
 import { AccountService } from '../account/account.service';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class InventoryService {
@@ -13,10 +14,38 @@ export class InventoryService {
 
     constructor(
         private http: HttpClient,
-        private accountService: AccountService
+        private accountService: AccountService,
+        private router: Router
     ) {}
 
     addItem() {}
+
+    getItem(index: number) {
+        return this.items[index];
+    }
+
+    deleteItem(index: number) {
+        const item = this.items.splice(index, 1)[0];
+
+        // Update MongoDB
+        this.http
+            .delete(`${environment.apiURL}/products/${item._id}`)
+            .subscribe(() => {
+                this.router.navigate(['/inventory']);
+            });
+    }
+
+    updateItem(index: number, updateItem: Item) {
+        const item = this.items[index];
+
+        // Update db
+        this.http
+            .put(`${environment.apiURL}/products/${item._id}`, updateItem)
+            .subscribe(() => {
+                this.items[index] = updateItem;
+                this.router.navigate(['/inventory']);
+            });
+    }
 
     getAllItems() {
         this.http

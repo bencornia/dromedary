@@ -2,7 +2,7 @@
     <div class="col"><h1>Inventory Detail</h1></div>
     <hr />
 </div>
-<form class="mt-5" [formGroup]="inventoryForm">
+<form class="mt-5" [formGroup]="inventoryForm" (submit)="onUpdateItem()">
     <div class="mb-3">
         <label for="productName">Product Name</label>
         <input
@@ -44,4 +44,6 @@
         <a [routerLink]="['/inventory']">Go Back</a>
     </div>
 </form>
-<button class="btn btn-danger mt-5">Delete Item</button>
+<button class="btn btn-danger mt-5" (click)="onDeleteItem()">
+    Delete Item
+</button>
