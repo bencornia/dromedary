@@ -162,13 +162,16 @@ export class AccountService {
     }
 
     delete(userId: string) {
-        this.http
-            .delete(`${environment.apiURL}/users/${userId}`)
-            .subscribe(() => {
+        return this.http.delete(`${environment.apiURL}/users/${userId}`).pipe(
+            catchError(this.handleError),
+            tap(() => {
                 localStorage.removeItem('dromedary-account-data');
                 this.authStatus.next(false);
-                this.router.navigate(['/account/login']);
-            });
+                this.http
+                    .delete(`${environment.apiURL}/products/business/${userId}`)
+                    .subscribe();
+            })
+        );
     }
 
     updatePassword(userId: string, passwords: {}) {
