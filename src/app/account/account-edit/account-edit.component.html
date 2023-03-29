@@ -1,5 +1,5 @@
 <form [formGroup]="form" (submit)="onSaveAccount()">
-    <div class="mb-3">
+    <!-- <div class="mb-3">
         <label for="profileImage" class="form-label">Profile Image</label>
         <div
             class="image-preview"
@@ -17,7 +17,7 @@
         <span class="form-text text-danger" *ngIf="profileImage.invalid">{{
             imageErrorMessage
         }}</span>
-    </div>
+    </div> -->
 
     <div class="mb-3">
         <label for="ownerName" class="form-label">Owner Name</label>
@@ -88,7 +88,7 @@
     <div class="mb-3" *ngIf="!editMode">
         <button
             class="btn btn-primary"
-            [disabled]="!form.valid"
+            [disabled]="form.invalid || !form.touched"
             (click)="onSaveAccount()"
         >
             Sign Up
@@ -102,7 +102,7 @@
     <div class="mb-3" *ngIf="editMode">
         <button
             class="btn btn-primary"
-            [disabled]="!form.valid"
+            [disabled]="form.invalid || !form.touched"
             (click)="onSaveAccount()"
         >
             Update Information

@@ -123,9 +123,12 @@ export class AccountService {
         return throwError(() => new Error(msg));
     }
 
-    createUser(formData: FormData, email, password) {
+    // createUser(formData: FormData, email, password) {
+    //     return this.http
+    //         .post<IUser>(`${environment.apiURL}/users`, formData)
+    createUser(userData: IUser, email: string, password: string) {
         return this.http
-            .post<IUser>(`${environment.apiURL}/users`, formData)
+            .post<IUser>(`${environment.apiURL}/users`, userData)
             .pipe(
                 catchError(this.handleError),
                 tap(() => {
@@ -134,9 +137,12 @@ export class AccountService {
             );
     }
 
-    updateUser(formData: FormData, userId: string) {
+    // updateUser(formData: FormData, userId: string) {
+    //     return this.http
+    //         .put(`${environment.apiURL}/users/${userId}`, formData)
+    updateUser(userData: IUser, userId: string) {
         return this.http
-            .put(`${environment.apiURL}/users/${userId}`, formData)
+            .put(`${environment.apiURL}/users/${userId}`, userData)
             .pipe(
                 catchError(this.handleError),
                 tap(() => {
@@ -148,17 +154,15 @@ export class AccountService {
     updateAccount(userId: string) {
         this.http
             .get<IUser>(`${environment.apiURL}/users/${userId}`)
-            .subscribe(
-                ({ businessName, email, ownerName, profileImagePath }) => {
-                    // Update current user
-                    this.accountData.businessName = businessName;
-                    this.accountData.email = email;
-                    this.accountData.ownerName = ownerName;
-                    this.accountData.profileImagePath = profileImagePath;
+            .subscribe(({ businessName, email, ownerName }) => {
+                // Update current user
+                this.accountData.businessName = businessName;
+                this.accountData.email = email;
+                this.accountData.ownerName = ownerName;
+                // this.accountData.profileImagePath = profileImagePath;
 
-                    this.handleAuthentication(this.accountData);
-                }
-            );
+                this.handleAuthentication(this.accountData);
+            });
     }
 
     delete(userId: string) {

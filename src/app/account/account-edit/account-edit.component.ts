@@ -36,12 +36,12 @@ export class AccountEditComponent implements OnInit, OnDestroy {
 
         // Create reactive form template
         this.form = new FormGroup({
-            profileImage: new FormControl(null, {
-                validators: [
-                    requiredFileTypes(['jpg', 'jpeg', 'png']),
-                    fileSizeValidator,
-                ],
-            }),
+            // profileImage: new FormControl(null, {
+            //     validators: [
+            //         requiredFileTypes(['jpg', 'jpeg', 'png']),
+            //         fileSizeValidator,
+            //     ],
+            // }),
             ownerName: new FormControl(null, {
                 validators: [Validators.required],
             }),
@@ -63,7 +63,7 @@ export class AccountEditComponent implements OnInit, OnDestroy {
 
         // Patch values if editing
         if (this.editMode) {
-            this.imagePreview = this.accountData.profileImagePath;
+            // this.imagePreview = this.accountData.profileImagePath;
 
             this.form.patchValue({ ownerName: this.accountData.ownerName });
             this.form.patchValue({
@@ -101,28 +101,28 @@ export class AccountEditComponent implements OnInit, OnDestroy {
         }
 
         // Create form data
-        const user = this.form.value;
-        const formData = new FormData();
+        const user: IUser = this.form.value;
+        // const formData = new FormData();
 
         // Add optional image upload
-        if (user.profileImage) {
-            formData.append(
-                'profileImage',
-                user.profileImage,
-                user.profileImage.name
-            );
-        }
+        // if (user.profileImage) {
+        //     formData.append(
+        //         'profileImage',
+        //         user.profileImage,
+        //         user.profileImage.name
+        //     );
+        // }
 
         // Add business info
-        formData.append('ownerName', user.ownerName);
-        formData.append('businessName', user.businessName);
-        formData.append('email', user.email);
-        formData.append('password', user.password);
+        // formData.append('ownerName', user.ownerName);
+        // formData.append('businessName', user.businessName);
+        // formData.append('email', user.email);
+        // formData.append('password', user.password);
 
         // We are either signing up or updating our account
         if (!this.editMode) {
             this.accountService
-                .createUser(formData, user.email, user.password)
+                .createUser(user, user.email, user.password)
                 .subscribe({
                     next: () => {},
                     error: (err: Error) => {
@@ -131,7 +131,7 @@ export class AccountEditComponent implements OnInit, OnDestroy {
                 });
         } else if (this.editMode) {
             this.accountService
-                .updateUser(formData, this.accountData.userId)
+                .updateUser(user, this.accountData.userId)
                 .subscribe({
                     next: () => {
                         this.router.navigate(['/account']);

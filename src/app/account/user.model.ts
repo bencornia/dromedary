@@ -3,9 +3,9 @@ export interface IUser {
     ownerName: string;
     email: string;
     password: string;
-    profileImagePath: string;
-    createdDate: string;
-    lastUpdatedDate: string;
+    // profileImagePath: string;
+    createdDate?: string;
+    lastUpdatedDate?: string;
 }
 
 export interface AccountData {
